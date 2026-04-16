@@ -1,26 +1,28 @@
 @startuml
-' If no parent then collection
+
+' folder is also an collection but without parent
 entity Folder {
-   _id: objectId
-   parent_id?: int
-   name: string
+    id: int
+    parent_id?: int
+    name: string
 }
 
+' Body can only be json
 entity Request {
-   _id: objectId
-   folder_id: objectId
-   request_method_id: objectId
-   name: string
-   url?: string
+    id: int
+    folder_id: int
+    method_id: int
+    url: string
+    body?: string 
 }
 
-entity RequestMethod {
-   _id: objectId
-   name: string
+entity Method {
+    id: int
+    name: string
 }
 
-Folder "0..*" --- "0..1" Folder
-Folder "1" --- "0..*" Request
-Request "1" --- "0..*" RequestMethod
+Folder "0..1" -- "0..*" Folder : parent/children
+Folder "1..1" -- "0..*" Request
+Method "1..1" -- "0..*" Request
 
 @enduml
