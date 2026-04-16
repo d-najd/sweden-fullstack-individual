@@ -1,7 +1,7 @@
 import envConfig from "./env"
 import { MongoClient, ServerApiVersion } from "mongodb"
 
-const uri = `mongodb://${envConfig.username}:${envConfig.password}@ac-goxif1i-shard-00-00.7k3tg9d.mongodb.net:27017,ac-goxif1i-shard-00-01.7k3tg9d.mongodb.net:27017,ac-goxif1i-shard-00-02.7k3tg9d.mongodb.net:27017/?ssl=true&replicaSet=atlas-3hakrn-shard-0&authSource=admin&appName=${envConfig.database}`
+const uri = `mongodb://${envConfig.username}:${envConfig.password}@ac-goxif1i-shard-00-00.7k3tg9d.mongodb.net:27017,ac-goxif1i-shard-00-01.7k3tg9d.mongodb.net:27017,ac-goxif1i-shard-00-02.7k3tg9d.mongodb.net:27017/?ssl=true&replicaSet=atlas-3hakrn-shard-0&authSource=admin&appName=sweden-fullstack-individual`
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -28,4 +28,5 @@ async function run() {
 }
 run().catch(console.dir)
 
-export default client
+const db = client.db(envConfig.database)
+export default db

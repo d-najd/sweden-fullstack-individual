@@ -1,0 +1,26 @@
+@startuml
+' If no parent then collection
+entity Folder {
+    id: int
+    parent_id?: int
+    name: string
+}
+
+entity Request {
+    id: int
+    folder_id: int
+    request_method_id: int
+    name: string
+    url?: string
+}
+
+entity RequestMethod {
+    id: int
+    name: string
+}
+
+Folder "0..*" --- "0..1" Folder
+Folder "1" --- "0..*" Request
+Request "1" --- "0..*" RequestMethod
+
+@enduml

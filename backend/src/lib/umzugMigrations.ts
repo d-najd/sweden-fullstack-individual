@@ -1,14 +1,10 @@
 // migrate.js
-import {
-	Umzug,
-	SequelizeStorage,
-	RunnableMigration,
-	MigrationParams,
-} from "umzug"
+import { Umzug, MongoDBStorage } from "umzug"
 import { Options, Sequelize } from "sequelize"
 import fs from "fs/promises"
 import path from "path"
 import envConfig from "@/config/env"
+import db from "@/config/database"
 
 export const config: Options = {
 	host: envConfig.databaseHost,
@@ -30,9 +26,9 @@ async function getFlywayMigrations() {
 
 	const migrations = []
 	for (const file of files) {
-		let match = file.match(/^V(\d+)__(.+)\.sql$/)
+		let match = file.match(/^V(\d+)__(.+)\.ts/)
 		if (!match) {
-			match = file.match(/^V(\d+)_(.+)\.sql$/)
+			match = file.match(/^V(\d+)_(.+)\.ts/)
 		}
 		if (!match) continue
 
@@ -41,11 +37,15 @@ async function getFlywayMigrations() {
 		const filePath = path.join(migrationsDir, file)
 		const sql = await fs.readFile(filePath, "utf-8")
 
+		const migrationModule = await import(filePath)
+
 		migrations.push({
 			name: file,
 			version,
 			description,
 			sql,
+			up: migrationModule.up,
+			path: filePath,
 		})
 	}
 
@@ -55,25 +55,14 @@ async function getFlywayMigrations() {
 
 const flywayMigrations = await getFlywayMigrations()
 
-type MigrationContext = {
-	sequelize: Sequelize
-}
-
-const migrations: RunnableMigration<MigrationContext>[] = flywayMigrations.map(
-	(o) => ({
-		name: o.name,
-		up: async ({ context }: MigrationParams<MigrationContext>) => {
-			await context.sequelize.query(o.sql)
-		},
-	}),
-)
-
 const umzug = new Umzug({
-	migrations: migrations,
+	migrations: flywayMigrations.map((m) => ({
+		name: m.name,
+		up: () => m.up,
+	})),
 	context: { sequelize },
-	storage: new SequelizeStorage({
-		sequelize,
-		tableName: "schema_history",
+	storage: new MongoDBStorage({
+		collection: db.collection("migrations"),
 	}),
 	logger: console,
 })
