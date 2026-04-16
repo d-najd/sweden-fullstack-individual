@@ -1,5 +1,4 @@
 import db from "@/config/database"
-import RequestMethodCreate from "@/shared/types/request_method/requestMethod.create"
 
 export async function up() {
 	const requestMethodsName = "request_methods"
@@ -10,7 +9,7 @@ export async function up() {
 				required: ["name"],
 				additionalProperties: false,
 				properties: {
-					_id: {},
+					_id: { bsonType: "objectId" },
 					name: {
 						bsonType: "string",
 						description: "Request method I.E GET, POST, DELETE",
@@ -20,7 +19,7 @@ export async function up() {
 		},
 	})
 
-	const requestsMethods: RequestMethodCreate[] = [
+	const requestsMethods = [
 		{ name: "GET" },
 		{ name: "POST" },
 		{ name: "PUT" },
@@ -29,24 +28,22 @@ export async function up() {
 		{ name: "HEAD" },
 		{ name: "OPTIONS" },
 	]
-
 	await db.collection(requestMethodsName).insertMany(requestsMethods)
 
 	await db.createCollection("folders", {
 		validator: {
 			$jsonSchema: {
 				bsonType: "object",
-				required: ["name"],
 				additionalProperties: false,
 				properties: {
-					_id: {},
+					_id: { bsonType: "objectId" },
 					name: {
 						bsonType: "string",
 						description:
 							"Name of the collection (if there is no parent_id) or folder (if there is parent_id)",
 					},
 					parent_id: {
-						bsonType: ["object", "null"],
+						bsonType: ["objectId", "null"],
 						description:
 							"must be an ObjectId referencing another collection/folder, or null",
 					},
@@ -59,23 +56,26 @@ export async function up() {
 		validator: {
 			$jsonSchema: {
 				bsonType: "object",
-				required: ["folder_id", "request_method_id", "name"],
 				additionalProperties: false,
 				properties: {
-					_id: {},
+					_id: { bsonType: "objectId" },
 					name: {
 						bsonType: "string",
 						description: "Name of the request",
 					},
 					url: {
-						bsonType: "string",
+						bsonType: ["string", "null"],
 						description:
 							"URl that the request will request from, may be null",
+					},
+					folder_id: {
+						bsonType: "objectId",
+					},
+					request_method_id: {
+						bsonType: "objectId",
 					},
 				},
 			},
 		},
 	})
-
-	await db.createCollection("")
 }

@@ -1,22 +1,22 @@
 @startuml
 ' If no parent then collection
 entity Folder {
-    id: int
-    parent_id?: int
-    name: string
+   _id: objectId
+   parent_id?: int
+   name: string
 }
 
 entity Request {
-    id: int
-    folder_id: int
-    request_method_id: int
-    name: string
-    url?: string
+   _id: objectId
+   folder_id: objectId
+   request_method_id: objectId
+   name: string
+   url?: string
 }
 
 entity RequestMethod {
-    id: int
-    name: string
+   _id: objectId
+   name: string
 }
 
 Folder "0..*" --- "0..1" Folder
