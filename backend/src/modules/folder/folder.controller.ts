@@ -7,7 +7,10 @@ class FolderController {
 		try {
 			let parentId: string | undefined
 			if (req.params.parent_id) {
-				parentId = req.params.parentId as string
+				parentId = req.params.parent_id as string
+				console.log("ID IS" + parentId)
+			} else {
+				console.log("UNDEFINED")
 			}
 
 			const dtos = await folderService.getByFolderId(parentId)
@@ -31,17 +34,17 @@ class FolderController {
 		}
 	}
 
-   async delete(req: Request, res: Response) {
-      try {
-         const id = req.params.id as string
-         await folderService.delete(id)
+	async delete(req: Request, res: Response) {
+		try {
+			const id = req.params.id as string
+			await folderService.delete(id)
 
-         res.status(204).send()
-      } catch (error) {
-         console.error(error)
-         res.status(500).json(error)
-      }
-   }
+			res.status(204).send()
+		} catch (error) {
+			console.error(error)
+			res.status(500).json(error)
+		}
+	}
 }
 
 export default new FolderController()

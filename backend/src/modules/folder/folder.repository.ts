@@ -9,6 +9,7 @@ class FolderRepository {
 
 	async getByParentId(id?: string): Promise<FolderEntity[]> {
 		const query = id ? { parent_id: new ObjectId(id) } : { parent_id: null }
+		console.log("QUERTY " + JSON.stringify(query))
 		return await this.collection.find(query).toArray()
 	}
 
@@ -22,12 +23,12 @@ class FolderRepository {
 		return result.insertedId.toString()
 	}
 
-   async delete(id: string) {
-      const query = { _id: new ObjectId(id)}
-      const result = await this.collection.deleteOne(query)
+	async delete(id: string) {
+		const query = { _id: new ObjectId(id) }
+		const result = await this.collection.deleteOne(query)
 
-      return result.deletedCount > 0
-   }
+		return result.deletedCount > 0
+	}
 }
 
 export default new FolderRepository()

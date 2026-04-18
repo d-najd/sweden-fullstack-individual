@@ -1,0 +1,32 @@
+### 
+
+@FOLDER = {{API_URL}}/folder
+@id = 69e3fe5e9e88e0e081baa348
+@parent_id = 69e3fe5e9e88e0e081baa348
+
+
+### Get collections
+
+GET {{FOLDER}}/parent_id/ HTTP/1.1
+
+
+### Get by parent_id
+
+# // # @prompt parent_id
+
+GET {{FOLDER}}/parent_id/{{parent_id}} HTTP/1.1
+
+
+### Create
+
+POST {{FOLDER}} HTTP/1.1
+
+{
+  "name": "RERE",
+  "parent_id": "69e3fe5e9e88e0e081baa348"
+}
+
+
+### Delete
+
+DELETE {{FOLDER}}/{{id}} HTTP/1.1
