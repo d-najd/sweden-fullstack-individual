@@ -9,7 +9,6 @@ class FolderRepository {
 
 	async getByParentId(id?: string): Promise<FolderEntity[]> {
 		const query = id ? { parent_id: new ObjectId(id) } : { parent_id: null }
-		console.log("QUERTY " + JSON.stringify(query))
 		return await this.collection.find(query).toArray()
 	}
 

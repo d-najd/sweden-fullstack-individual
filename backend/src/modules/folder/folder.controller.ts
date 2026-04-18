@@ -8,9 +8,6 @@ class FolderController {
 			let parentId: string | undefined
 			if (req.params.parent_id) {
 				parentId = req.params.parent_id as string
-				console.log("ID IS" + parentId)
-			} else {
-				console.log("UNDEFINED")
 			}
 
 			const dtos = await folderService.getByFolderId(parentId)
