@@ -1,0 +1,28 @@
+### 
+
+@REQUEST = {{API_URL}}/request
+@id = 69e3fe5e9e88e0e081baa348
+@parent_id = 69e3fe5e9e88e0e081baa348
+
+
+
+### Get by folder_id
+
+# // # @prompt folder_id
+
+GET {{REQUEST}}/folder_id/{{folder_id}} HTTP/1.1
+
+
+### Create
+
+POST {{REQUEST}} HTTP/1.1
+
+{
+  "name": "RERE",
+  "parent_id": "69e3fe5e9e88e0e081baa348"
+}
+
+
+### Delete
+
+DELETE {{REQUEST}}/{{id}} HTTP/1.1
