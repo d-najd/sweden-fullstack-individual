@@ -2,6 +2,7 @@ import express from "express"
 import umzug from "./lib/umzugMigrations"
 import envConfig from "./config/env"
 import cors from "cors"
+import folderRouter from "./modules/folder/folder.routes"
 
 // Run db migrations
 await umzug.up()
@@ -14,5 +15,7 @@ app.use(express.json())
 app.listen(envConfig.port, () =>
 	console.log(`Server running on: localhost:${envConfig.port}`),
 )
+
+app.use("/folder", folderRouter)
 
 export default app
