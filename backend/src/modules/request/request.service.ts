@@ -15,7 +15,7 @@ class RequestService {
 		const entity = RequestMapper.toEntity(dto)
 
 		const session = client.startSession()
-      let createdEntity: RequestEntity
+		let createdEntity: RequestEntity
 
 		try {
 			session.startTransaction()
@@ -27,7 +27,7 @@ class RequestService {
 			await session.commitTransaction()
 		} catch (err) {
 			await session.abortTransaction()
-         throw err
+			throw err
 		} finally {
 			await session.endSession()
 		}
