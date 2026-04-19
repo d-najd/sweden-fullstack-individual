@@ -32,7 +32,6 @@ export default class RequestMapper {
 	}
 
 	static toDto(entity: RequestEntity): RequestDto {
-		console.log("TRYING TO MAP " + JSON.stringify(entity))
 		return {
 			id: entity._id.toString(),
 			name: entity.name,
