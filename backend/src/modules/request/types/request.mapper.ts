@@ -10,34 +10,35 @@ export default class RequestMapper {
 			entity._id = new ObjectId(dto.id)
 		}
 
-      if (dto.folder_id !== undefined) {
-         entity.folder_id = new ObjectId(dto.folder_id)
-      }
+		if (dto.name !== undefined) {
+			entity.name = dto.name
+		}
 
-      if (dto.url !== undefined) {
-         entity.url = dto.url
-      }
+		if (dto.url !== undefined) {
+			entity.url = dto.url
+		} else {
+			entity.url = null
+		}
 
-      if (dto.method_id !== undefined) {
-         entity.method_id = new ObjectId(dto.method_id)
-      }
+		if (dto.folder_id !== undefined) {
+			entity.folder_id = new ObjectId(dto.folder_id)
+		}
 
-      if (dto.body !== undefined) {
-         entity.body = dto.body
-      } else {
-         entity.body = null
-      }
+		if (dto.request_method_id !== undefined) {
+			entity.request_method_id = new ObjectId(dto.request_method_id)
+		}
 
 		return entity
 	}
 
 	static toDto(entity: RequestEntity): RequestDto {
+		console.log("TRYING TO MAP " + JSON.stringify(entity))
 		return {
 			id: entity._id.toString(),
-         folder_id: entity.folder_id.toString(),
-         url: entity.url,
-         method_id: entity.method_id.toString(),
-         body: entity.body ?? undefined
+			name: entity.name,
+			url: entity.url ?? undefined,
+			folder_id: entity.folder_id.toString(),
+			request_method_id: entity.request_method_id.toString(),
 		}
 	}
 }

@@ -1,11 +1,11 @@
 import { ObjectId } from "mongodb"
 
 type RequestEntity = {
-   _id: ObjectId,
-   folder_id: ObjectId,
-   url: string
-   method_id: ObjectId,
-   body: string | null
+	_id: ObjectId
+	name: string
+	url: string | null
+	folder_id: ObjectId
+	request_method_id: ObjectId
 }
 
 export default RequestEntity

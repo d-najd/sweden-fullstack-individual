@@ -1,7 +1,7 @@
 import envConfig from "./env"
 import { MongoClient, ServerApiVersion } from "mongodb"
 
-const client = new MongoClient(envConfig.databaseUrl!, {
+export const client = new MongoClient(envConfig.databaseUrl!, {
 	serverApi: {
 		version: ServerApiVersion.v1,
 		strict: true,

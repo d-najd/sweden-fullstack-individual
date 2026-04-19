@@ -1,9 +1,9 @@
 ### 
 
 @REQUEST = {{API_URL}}/request
-@id = 69e3fe5e9e88e0e081baa348
-@parent_id = 69e3fe5e9e88e0e081baa348
-
+@folder_id = 69e3feac9e88e0e081baa349
+@id = 69e563ccbd1538833bc57e21
+@method_id = 69e0da060e2bbf6dce243090
 
 
 ### Get by folder_id
@@ -18,8 +18,10 @@ GET {{REQUEST}}/folder_id/{{folder_id}} HTTP/1.1
 POST {{REQUEST}} HTTP/1.1
 
 {
+  "folder_id": "{{folder_id}}",
   "name": "RERE",
-  "parent_id": "69e3fe5e9e88e0e081baa348"
+  "request_method_id": "{{method_id}}",
+  "url": "test"
 }
 
 

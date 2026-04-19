@@ -1,8 +1,8 @@
 type RequestCreate = {
-   folder_id: string,
-   method_id: string,
-   url: string
-   body?: string
+	url?: string
+	name: string
+	folder_id: string
+	request_method_id: string
 }
 
 export default RequestCreate
