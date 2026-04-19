@@ -1,10 +1,9 @@
 import { ObjectId } from "mongodb"
 import RequestEntity from "./request.entity"
-import FolderEntity from "@/modules/folder/types/folder.entity"
 import RequestDto from "@/shared/types/request/request.dto"
 
 export default class RequestMapper {
-	static toEntity(dto: Partial<RequestDto>): Partial<FolderEntity> {
+	static toEntity(dto: Partial<RequestDto>): Partial<RequestEntity> {
 		const entity: Partial<RequestEntity> = {}
 
 		if (dto.id !== undefined) {
