@@ -1,9 +1,9 @@
-import { CollapsibleFileTree } from "./components/collapsableFileTree"
+import { RequestMenu } from "./components/requestMenu"
 
 export default function DashboardPage() {
 	return (
 		<>
-			<CollapsibleFileTree />
+			<RequestMenu />
 		</>
 	)
 }
