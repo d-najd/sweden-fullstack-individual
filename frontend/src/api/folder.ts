@@ -7,7 +7,7 @@ class FolderApi {
 	path = `${envConfig.backend}folder`
 
 	async getByParentId(parentId?: string) {
-		const { data } = await axios.get(`${this.path}/parent-id`, {
+		const { data } = await axios.get(`${this.path}/parent_id`, {
 			params: { id: parentId },
 		})
 		return data as FolderDto[]
