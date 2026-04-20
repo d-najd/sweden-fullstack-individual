@@ -1,22 +1,18 @@
-import { useEffect, useState } from "react"
 import heroImg from "@/assets/hero.png"
-import useCounterStore from "./stores/counter"
-import { ButtonOutlinedOnHover } from "@/components/ButtonOutlinedOnHover"
 import { Box, Button, Center, Code, Separator, VStack } from "@chakra-ui/react"
-import { useNavigate } from "react-router-dom"
 import ReactIcon from "./components/ReactIcon"
 import { ViteIcon } from "./components/ViteIcon"
-import useUserStore from "./stores/userStore"
+import { useNavigate } from "react-router-dom"
 
 export default function WelcomePage() {
-	const [count, setCount] = useState(0)
-	const { count: zustandCount, increment } = useCounterStore()
+	// const [count, setCount] = useState(0)
+	// const { count: zustandCount, increment } = useCounterStore()
 	const navigate = useNavigate()
-	const { users, getUsers } = useUserStore()
-
-	useEffect(() => {
-		getUsers()
-	}, [getUsers])
+	// const { users, getUsers } = useUserStore()
+	//
+	// useEffect(() => {
+	// 	getUsers()
+	// }, [getUsers])
 
 	return (
 		<Box minH="100vh" minW="100vw" bg="#16171d">
@@ -53,15 +49,6 @@ export default function WelcomePage() {
 						variant="solid"
 						minW="100vw"
 					/>
-					<ButtonOutlinedOnHover
-						onClick={() => setCount((count) => count + 1)}
-					>
-						Count is {count}
-					</ButtonOutlinedOnHover>
-
-					<ButtonOutlinedOnHover onClick={() => increment()}>
-						Zustand count is {zustandCount}
-					</ButtonOutlinedOnHover>
 					<Button
 						variant="outline"
 						color="white"
@@ -70,11 +57,6 @@ export default function WelcomePage() {
 						Test Zustand (press go back)
 					</Button>
 					<b>All the users we know, there are not many</b>
-					{users.map((user) => (
-						<p key={user.username}>
-							{user.username} - {user.gmail}
-						</p>
-					))}
 				</VStack>
 			</Center>
 		</Box>
