@@ -1,0 +1,7 @@
+### 
+
+@REQUEST_METHOD = {{API_URL}}/request_method
+
+### Get all
+
+GET {{REQUEST_METHOD}}/ HTTP/1.1
