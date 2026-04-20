@@ -7,9 +7,7 @@ class RequestApi {
 	path = `${envConfig.backend}request`
 
 	async getByFolderId(folderId: string) {
-		const { data } = await axios.get(`${this.path}/folder_id`, {
-			params: { id: folderId },
-		})
+		const { data } = await axios.get(`${this.path}/folder_id/${folderId}`)
 		return data as RequestDto[]
 	}
 

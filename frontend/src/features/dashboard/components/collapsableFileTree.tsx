@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/collapsible"
 import React, { useEffect } from "react"
 import useFolderStore from "../stores/folderStore"
+import clsx from "clsx"
 
 // const fileTreeExample: FileTreeItem[] = [
 // 	{
@@ -62,11 +63,11 @@ import useFolderStore from "../stores/folderStore"
 // 	{ name: ".gitignore" },
 // ]
 
-type FileTreeItem = { 
-   id: string,
-   name: string,
-   items?: FileTreeItem[]
-} 
+type FileTreeItem = {
+	id: string
+	name: string
+	items?: FileTreeItem[]
+}
 
 export function CollapsibleFileTree() {
 	const { folders, loadMoreFolders } = useFolderStore()
@@ -76,11 +77,31 @@ export function CollapsibleFileTree() {
 	}, [loadMoreFolders])
 
 	const fileTree: FileTreeItem[] = React.useMemo(() => {
-		return folders.map((o) => ({
-         id: o.id,
-			name: o.name,
-         items: []
-		}))
+		const map = new Map<string, FileTreeItem>()
+
+		folders.forEach((f) => {
+			map.set(f.id, {
+				id: f.id,
+				name: f.name,
+				items: [],
+			})
+		})
+
+		const roots: FileTreeItem[] = []
+		folders.forEach((f) => {
+			const node = map.get(f.id)!
+
+			if (f.parent_id) {
+				const parent = map.get(f.parent_id)
+				if (parent) {
+					parent.items.push(node)
+				}
+			} else {
+				roots.push(node)
+			}
+		})
+
+		return roots
 	}, [folders])
 
 	return (
@@ -88,7 +109,7 @@ export function CollapsibleFileTree() {
 			<CardContent>
 				<div className="flex flex-col gap-1">
 					{fileTree.map((item) => (
-						<TreeItem key={item.name} fileItem={item} />
+						<TreeItem key={item.id} fileItem={item} />
 					))}
 				</div>
 			</CardContent>
@@ -98,13 +119,21 @@ export function CollapsibleFileTree() {
 
 const TreeItem = ({ fileItem }: { fileItem: FileTreeItem }) => {
 	const [isOpen, setIsOpen] = React.useState(false)
+	const { loadMoreFolders } = useFolderStore()
+
+	useEffect(() => {
+		if (!isOpen) return
+		if (!fileItem.items) return
+
+		loadMoreFolders(fileItem.id)
+	}, [fileItem, isOpen, loadMoreFolders])
 
 	if (fileItem.items) {
 		return (
 			<Collapsible
 				open={isOpen}
 				onOpenChange={setIsOpen}
-				key={fileItem.name}
+				key={fileItem.id}
 			>
 				<CollapsibleTrigger asChild>
 					<Button
@@ -112,14 +141,18 @@ const TreeItem = ({ fileItem }: { fileItem: FileTreeItem }) => {
 						size="sm"
 						className="group w-full justify-start transition-none hover:bg-accent hover:text-accent-foreground"
 					>
-						<ChevronRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
+						<ChevronRightIcon
+							className={clsx("transition-transform", {
+								"rotate-90": isOpen,
+							})}
+						/>
 						{fileItem.name}
 					</Button>
 				</CollapsibleTrigger>
 				<CollapsibleContent className="mt-1 ml-5 style-lyra:ml-4">
 					<div className="flex flex-col gap-1">
 						{fileItem.items.map((child) => (
-							<TreeItem key={child.name} fileItem={child} />
+							<TreeItem key={child.id} fileItem={child} />
 						))}
 					</div>
 				</CollapsibleContent>
@@ -129,7 +162,7 @@ const TreeItem = ({ fileItem }: { fileItem: FileTreeItem }) => {
 
 	return (
 		<Button
-			key={fileItem.name}
+			key={fileItem.id}
 			variant="link"
 			size="sm"
 			className="w-full justify-start gap-2 text-foreground"

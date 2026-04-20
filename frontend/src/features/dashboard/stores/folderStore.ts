@@ -16,25 +16,29 @@ export type FolderState = {
 	loadMoreFolders: (parentId?: string) => void
 }
 
+let queue = Promise.resolve()
+
 const useFolderStore = create<FolderState>((set, get) => ({
 	folders: [],
 	fetchedParentIds: [],
 	loadMoreFolders: async (parentId?: string) => {
-		const parentIdForMarkFetched = parentId ?? ""
-		if (get().fetchedParentIds.includes(parentIdForMarkFetched)) {
-			console.warn(`Already fetched folders by parentId ${parentId}`)
-			return
-		}
+		queue = queue.then(async () => {
+			const parentIdForMarkFetched = parentId ?? ""
+			if (get().fetchedParentIds.includes(parentIdForMarkFetched)) {
+				console.log(`Already fetched folders by parentId ${parentId}`)
+				return
+			}
 
-		const data = await folderApi.getByParentId(parentId)
+			const data = await folderApi.getByParentId(parentId)
 
-		set((state) => ({
-			folders: [...state.folders, ...data],
-			fetchedParentIds: [
-				...state.fetchedParentIds,
-				parentIdForMarkFetched,
-			],
-		}))
+			set((state) => ({
+				folders: [...state.folders, ...data],
+				fetchedParentIds: [
+					...state.fetchedParentIds,
+					parentIdForMarkFetched,
+				],
+			}))
+		})
 	},
 }))
 
