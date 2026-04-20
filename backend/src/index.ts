@@ -4,6 +4,7 @@ import envConfig from "./config/env"
 import cors from "cors"
 import folderRouter from "./modules/folder/folder.routes"
 import requestRouter from "./modules/request/request.routes"
+import requestMethodRouter from "./modules/request_method/requestMethod.routes"
 
 // Run db migrations
 await umzug.up()
@@ -19,5 +20,6 @@ app.listen(envConfig.port, () =>
 
 app.use("/folder", folderRouter)
 app.use("/request", requestRouter)
+app.use("/request_method", requestMethodRouter)
 
 export default app
