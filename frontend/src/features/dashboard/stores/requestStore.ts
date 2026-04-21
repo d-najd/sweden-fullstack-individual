@@ -15,7 +15,7 @@ export type RequestState = {
 
 let queue = Promise.resolve()
 
-const useRequestStore  = create<RequestState>()(
+const useRequestStore = create<RequestState>()(
 	subscribeWithSelector((set, get) => ({
 		requests: [],
 		fetchedFolderIds: [],
