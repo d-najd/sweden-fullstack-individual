@@ -11,6 +11,7 @@ export async function up() {
 				properties: {
 					_id: { bsonType: "objectId" },
 					name: {
+						// TODO make this unique
 						bsonType: "string",
 						description: "Request method I.E GET, POST, DELETE",
 					},
