@@ -11,67 +11,16 @@ import React, { useEffect } from "react"
 import useFolderStore from "../stores/folderStore"
 import clsx from "clsx"
 import useRequestStore from "../stores/requestStore"
-
-type FileTreeItem = {
-	id: string
-	name: string
-	items?: FileTreeItem[]
-}
+import FileTreeItem from "../types/FileTreeItem"
+import useFileTreeStore from "../stores/fileTreeStore"
 
 export function CollapsibleFileTree() {
-	const { folders, loadMoreFolders } = useFolderStore()
-	const { requests } = useRequestStore()
+	const { loadMoreFolders } = useFolderStore()
+	const { fileTree } = useFileTreeStore()
 
 	useEffect(() => {
 		loadMoreFolders()
 	}, [loadMoreFolders])
-
-	const fileTree: FileTreeItem[] = React.useMemo(() => {
-		const map = new Map<string, FileTreeItem>()
-
-		folders.forEach((o) => {
-			map.set(o.id, {
-				id: o.id,
-				name: o.name,
-				items: [],
-			})
-		})
-
-		requests.forEach((o) => {
-			map.set(o.id, {
-				id: o.id,
-				name: o.name,
-			})
-		})
-
-		const roots: FileTreeItem[] = []
-		folders.forEach((o) => {
-			const node = map.get(o.id)!
-
-			if (o.parent_id) {
-				const parent = map.get(o.parent_id)
-				if (parent) {
-					parent.items.push(node)
-				}
-			} else {
-				roots.push(node)
-			}
-		})
-		requests.forEach((o) => {
-			const node = map.get(o.id)!
-
-			if (o.folder_id) {
-				const parent = map.get(o.folder_id)
-				if (parent) {
-					parent.items.push(node)
-				}
-			} else {
-				roots.push(node)
-			}
-		})
-
-		return roots
-	}, [folders, requests])
 
 	return (
 		<Card className="mx-auto w-full max-w-[16rem] gap-2" size="sm">
