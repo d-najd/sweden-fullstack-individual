@@ -10,7 +10,7 @@ class FolderController {
 				parentId = req.params.parent_id as string
 			}
 
-			const dtos = await folderService.getByFolderId(parentId)
+			const dtos = await folderService.getByParentId(parentId)
 			res.json(dtos)
 		} catch (error) {
 			console.error(error)
@@ -20,7 +20,6 @@ class FolderController {
 
 	async create(req: Request, res: Response) {
 		try {
-			// Validate and cast request body using Typia
 			const body = req.body as FolderCreate
 			const newUser = await folderService.create(body)
 

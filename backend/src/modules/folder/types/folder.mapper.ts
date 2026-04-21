@@ -12,7 +12,9 @@ export default class FolderMapper {
 
 		if (dto.parent_id !== undefined) {
 			entity.parent_id = new ObjectId(dto.parent_id)
-		}
+		} else {
+         entity.parent_id = null
+      }
 
 		if (dto.name !== undefined) {
 			entity.name = dto.name

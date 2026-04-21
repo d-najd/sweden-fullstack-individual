@@ -5,7 +5,7 @@ import FolderCreate from "@/shared/types/folder/folder.create"
 import FolderEntity from "./types/folder.entity"
 
 class FolderService {
-	async getByFolderId(id?: string): Promise<FolderDto[]> {
+	async getByParentId(id?: string): Promise<FolderDto[]> {
 		const entities = await folderRepository.getByParentId(id)
 		return entities.map((o) => FolderMapper.toDto(o))
 	}
