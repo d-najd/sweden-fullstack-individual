@@ -10,7 +10,7 @@ export async function up() {
 				additionalProperties: false,
 				properties: {
 					_id: { bsonType: "objectId" },
-					name: {
+					name: { // TODO make this unique
 						bsonType: "string",
 						description: "Request method I.E GET, POST, DELETE",
 					},
