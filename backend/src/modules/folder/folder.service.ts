@@ -13,22 +13,24 @@ class FolderService {
 
 	async create(dto: FolderCreate): Promise<FolderDto> {
 		const entity = FolderMapper.toEntity(dto)
-      const session = client.startSession()
+		const session = client.startSession()
 
-      let createdEntity: FolderEntity
-      try {
-         session.startTransaction()
+		let createdEntity: FolderEntity
+		try {
+			session.startTransaction()
 
-		   const insertedId = await folderRepository.create(entity as FolderEntity)
-		   createdEntity = await folderRepository.getById(insertedId)
+			const insertedId = await folderRepository.create(
+				entity as FolderEntity,
+			)
+			createdEntity = await folderRepository.getById(insertedId)
 
-         await session.commitTransaction()
-      } catch (err) {
-         await session.abortTransaction()
-         throw err
-      } finally {
-         await session.endSession()
-      }
+			await session.commitTransaction()
+		} catch (err) {
+			await session.abortTransaction()
+			throw err
+		} finally {
+			await session.endSession()
+		}
 
 		return FolderMapper.toDto(createdEntity)
 	}
