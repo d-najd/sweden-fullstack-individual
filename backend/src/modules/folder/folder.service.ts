@@ -16,7 +16,6 @@ class FolderService {
       const session = client.startSession()
 
       let createdEntity: FolderEntity
-
       try {
          session.startTransaction()
 
