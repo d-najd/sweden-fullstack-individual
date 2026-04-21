@@ -1,6 +1,7 @@
 import FolderDto from "@/shared/types/folder/folder.dto"
 import { create } from "zustand"
 import folderApi from "@/api/folder"
+import { subscribeWithSelector } from "zustand/middleware"
 
 export type FolderState = {
 	folders: FolderDto[]
@@ -18,28 +19,32 @@ export type FolderState = {
 
 let queue = Promise.resolve()
 
-const useFolderStore = create<FolderState>((set, get) => ({
-	folders: [],
-	fetchedParentIds: [],
-	loadMoreFolders: async (parentId?: string) => {
-		queue = queue.then(async () => {
-			const parentIdForMarkFetched = parentId ?? ""
-			if (get().fetchedParentIds.includes(parentIdForMarkFetched)) {
-				console.log(`Already fetched folders by parentId ${parentId}`)
-				return
-			}
+const useFolderStore = create<FolderState>()(
+	subscribeWithSelector((set, get) => ({
+		folders: [],
+		fetchedParentIds: [],
+		loadMoreFolders: async (parentId?: string) => {
+			queue = queue.then(async () => {
+				const parentIdForMarkFetched = parentId ?? ""
+				if (get().fetchedParentIds.includes(parentIdForMarkFetched)) {
+					console.log(
+						`Already fetched folders by parentId ${parentId}`,
+					)
+					return
+				}
 
-			const data = await folderApi.getByParentId(parentId)
+				const data = await folderApi.getByParentId(parentId)
 
-			set((state) => ({
-				folders: [...state.folders, ...data],
-				fetchedParentIds: [
-					...state.fetchedParentIds,
-					parentIdForMarkFetched,
-				],
-			}))
-		})
-	},
-}))
+				set((state) => ({
+					folders: [...state.folders, ...data],
+					fetchedParentIds: [
+						...state.fetchedParentIds,
+						parentIdForMarkFetched,
+					],
+				}))
+			})
+		},
+	})),
+)
 
 export default useFolderStore
