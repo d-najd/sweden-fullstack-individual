@@ -1,18 +1,20 @@
-import Row from "@/components/Row"
-import useSelectedRequest from "../stores/selectedTreeStoreItemStore"
-import { ChevronRightIcon, MoreHorizontal, MoreHorizontalIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import clsx from "clsx"
 import Column from "@/components/Column"
-import { Input } from "@/components/ui/input"
+import Row from "@/components/Row"
+import { Button } from "@/components/ui/button"
+import { ButtonGroup } from "@/components/ui/button-group"
+import {
+	DropdownMenu,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
 	InputGroup,
 	InputGroupAddon,
 	InputGroupButton,
 	InputGroupInput,
 } from "@/components/ui/input-group"
-import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ButtonGroup } from "@/components/ui/button-group"
+import clsx from "clsx"
+import { ChevronRightIcon } from "lucide-react"
+import useSelectedRequest from "../stores/selectedTreeStoreItemStore"
 
 function RequestMenu() {
 	return (
@@ -22,28 +24,42 @@ function RequestMenu() {
 					<NavigationBar />
 				</Row>
 				<Row>
-					<InputGroup className="outline-solid! outline-teal-700! outline-2!">
+					<InputGroup className="outline-solid! outline-teal-700! outline-1!">
 						<InputGroupAddon className="outline-none!">
 							<InputGroupButton className="outline-none!">
-								<div className="w-1"></div>
+								<div className="w-1.5"></div>
 								<p>GET</p>
-								<div className="w-2"></div>
+								<div className="w-10"></div>
 								<ChevronRightIcon className="rotate-90" />
 								<div className="w-1 h-full border-solid! border-teal-900! border-l-2! "></div>
 							</InputGroupButton>
 						</InputGroupAddon>
-						<InputGroupInput className="focus:outline-none!"/>
+						<InputGroupInput className="focus:outline-none!" />
 					</InputGroup>
-               <ButtonGroup className="">
-                  <Button className="bg-blue-500! h-full pl-3! pr-3!">Send</Button>
-                  <DropdownMenu>
-                     <DropdownMenuTrigger asChild>
-                        <Button className="bg-blue-500! px-1.5! h-full border-l-1! border-l-black!">
-                           <MoreHorizontalIcon />
-                        </Button>
-                     </DropdownMenuTrigger>
-                  </DropdownMenu>
-               </ButtonGroup>
+					<ButtonGroup className="pl-1.5!">
+						<Button className="bg-blue-500! h-full pl-4! pr-4!">
+							Send
+						</Button>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button className="bg-blue-500! px-1.5! h-full border-l! border-l-black!">
+									<ChevronRightIcon className="rotate-90" />
+								</Button>
+							</DropdownMenuTrigger>
+						</DropdownMenu>
+					</ButtonGroup>
+				</Row>
+				<ButtonGroup className="gap-1 *:px-2! *:py-1!">
+					<Button>Docs</Button>
+					<Button>Params</Button>
+					<Button>Authorization</Button>
+					<Button>Headers</Button>
+					<Button>Body</Button>
+					<Button>Scripts</Button>
+					<Button>Settings</Button>
+				</ButtonGroup>
+				<Row>
+					<Button>Test</Button>
 				</Row>
 			</Column>
 		</>
@@ -88,6 +104,23 @@ function NavigationBar() {
 					</>
 				)
 			})}
+			<Row className="ml-auto! h-full!">
+            <ButtonGroup>
+            </ButtonGroup>
+
+				<ButtonGroup className="pl-1.5!">
+					<Button className="bg-blue-500! h-full pl-4! pr-4!">
+						Send
+					</Button>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button className="bg-blue-500! px-1.5! h-full! border-l! border-l-black!">
+								<ChevronRightIcon className="rotate-90" />
+							</Button>
+						</DropdownMenuTrigger>
+					</DropdownMenu>
+				</ButtonGroup>
+			</Row>
 		</>
 	)
 }
