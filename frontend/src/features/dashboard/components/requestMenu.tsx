@@ -1,7 +1,7 @@
 import Column from "@/components/Column"
 import Row from "@/components/Row"
 import { Button } from "@/components/ui/button"
-import { ButtonGroup, ButtonGroupText } from "@/components/ui/button-group"
+import { ButtonGroup } from "@/components/ui/button-group"
 import {
 	DropdownMenu,
 	DropdownMenuTrigger,
@@ -12,14 +12,37 @@ import {
 	InputGroupButton,
 	InputGroupInput,
 } from "@/components/ui/input-group"
+import { cva } from "class-variance-authority"
 import clsx from "clsx"
-import { ChevronRightIcon, LinkIcon, SaveIcon } from "lucide-react"
+import { ChevronRightIcon, SaveIcon } from "lucide-react"
 import useSelectedRequest from "../stores/selectedTreeStoreItemStore"
-import { cva, cx } from "class-variance-authority"
-import { twJoin, twMerge } from "tailwind-merge"
-import { cn } from "@/lib/utils"
+import { useState } from "react"
+
+const optionsButtonStyle = cva("p-1!", {
+	variants: {
+		enabled: {
+			true: "bg-white/10! text-white!",
+			false: "text-white/50! hover:text-white!",
+		},
+	},
+	defaultVariants: {
+		enabled: false,
+	},
+})
+
+const RequestMenuSetting = {
+	Docs: "Docs",
+	Params: "Params",
+	Authorization: "Authorization",
+	Body: "Body",
+	Scripts: "Scripts",
+	Settings: "Settings",
+}
 
 function RequestMenu() {
+	const [selectedMenuSetting] = useState(RequestMenuSetting.Body)
+	const requestMenuSettingsValues = Object.values(RequestMenuSetting)
+
 	return (
 		<>
 			<Column>
@@ -52,14 +75,19 @@ function RequestMenu() {
 						</DropdownMenu>
 					</ButtonGroup>
 				</Row>
-				<ButtonGroup className="gap-1 *:px-2! *:py-1!">
-					<Button>Docs</Button>
-					<Button>Params</Button>
-					<Button>Authorization</Button>
-					<Button>Headers</Button>
-					<Button>Body</Button>
-					<Button>Scripts</Button>
-					<Button>Settings</Button>
+				<ButtonGroup>
+					{requestMenuSettingsValues.map((name) => {
+						return (
+							<Button
+								className={optionsButtonStyle({
+									enabled: selectedMenuSetting === name,
+								})}
+								key={name}
+							>
+								{name}
+							</Button>
+						)
+					})}
 				</ButtonGroup>
 				<Row>
 					<Button>Test</Button>
