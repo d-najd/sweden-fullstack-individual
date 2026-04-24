@@ -1,10 +1,12 @@
+import { cn } from "@/lib/utils"
+
 interface RowProps extends React.HTMLAttributes<HTMLDivElement> {
 	children: React.ReactNode
 }
 
-function Row({ children, ...rest }: RowProps) {
+function Row({ children, className, ...rest }: RowProps) {
 	return (
-		<div className={`flex flex-row`} {...rest}>
+		<div className={cn(`flex flex-row`, className)} {...rest}>
 			{children}
 		</div>
 	)

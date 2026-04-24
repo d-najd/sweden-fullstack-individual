@@ -15,9 +15,8 @@ import {
 import clsx from "clsx"
 import { ChevronRightIcon, LinkIcon, SaveIcon } from "lucide-react"
 import useSelectedRequest from "../stores/selectedTreeStoreItemStore"
-import { cva, cx } from "class-variance-authority"
+import { cva } from "class-variance-authority"
 import { twJoin, twMerge } from "tailwind-merge"
-import { cn } from "@/lib/utils"
 
 function RequestMenu() {
 	return (
@@ -93,17 +92,20 @@ function NavigationBar() {
 		})
 	}
 
-	const saveButtonStyle = cva("py-0.5! px-1.5!", {
-		variants: {
-			enabled: {
-				true: "hover:bg-white/40!",
-				false: "opacity-30 hover:bg-white/20!",
-			},
-		},
-		defaultVariants: {
-			enabled: true,
-		},
-	})
+   const saveButtonStyle = cva(
+      "",
+      {
+         variants: {
+            enabled: {
+               true: "",
+               false: ""
+            }
+         },
+         defaultVariants: {
+            enabled: true
+         }
+      }
+   )
 
 	return (
 		<>
@@ -121,20 +123,24 @@ function NavigationBar() {
 			})}
 			<Row className="ml-auto!">
 				<ButtonGroup className="items-center">
-					<Button className={saveButtonStyle({ enabled: false })}>
+					<Button className={saveButtonStyle({enabled: false})}>
 						<SaveIcon />
 						Save
 					</Button>
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button
-								className={saveButtonStyle({ enabled: true })}
-							>
-								<ChevronRightIcon className="size-3.25! rotate-90" />
-							</Button>
-						</DropdownMenuTrigger>
-					</DropdownMenu>
+               <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+							<ChevronRightIcon className="rotate-90" />
+                  </DropdownMenuTrigger>
+               </DropdownMenu>
+
 				</ButtonGroup>
+
+            <ButtonGroup>
+               <Button>
+                  Share
+               </Button>
+               <LinkIcon />
+            </ButtonGroup>
 			</Row>
 		</>
 	)
