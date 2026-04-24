@@ -105,8 +105,7 @@ function NavigationBar() {
 				)
 			})}
 			<Row className="ml-auto! h-full!">
-            <ButtonGroup>
-            </ButtonGroup>
+				<ButtonGroup></ButtonGroup>
 
 				<ButtonGroup className="pl-1.5!">
 					<Button className="bg-blue-500! h-full pl-4! pr-4!">
