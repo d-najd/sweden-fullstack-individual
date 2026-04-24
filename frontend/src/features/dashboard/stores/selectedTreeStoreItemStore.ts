@@ -6,11 +6,11 @@ export type SelectedRequestState = {
 }
 
 const useSelectedRequest = create<SelectedRequestState>((set) => ({
-   setSelectedItem: (request: RequestDto) => {
-      set(() => ({
-         selectedRequest: request
-      }))
-   }
+	setSelectedItem: (request: RequestDto) => {
+		set(() => ({
+			selectedRequest: request,
+		}))
+	},
 }))
 
-export default useSelectedRequest 
+export default useSelectedRequest
