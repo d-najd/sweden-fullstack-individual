@@ -22,23 +22,23 @@ function RequestMenu() {
 					<NavigationBar />
 				</Row>
 				<Row>
-					<InputGroup>
-						<InputGroupAddon>
-							<InputGroupButton>
+					<InputGroup className="outline-solid! outline-teal-700! outline-2!">
+						<InputGroupAddon className="outline-none!">
+							<InputGroupButton className="outline-none!">
 								<div className="w-1"></div>
 								<p>GET</p>
 								<div className="w-2"></div>
 								<ChevronRightIcon className="rotate-90" />
-								<div className="w-1"></div>
+								<div className="w-1 h-full border-solid! border-teal-900! border-l-2! "></div>
 							</InputGroupButton>
 						</InputGroupAddon>
-						<InputGroupInput />
+						<InputGroupInput className="focus:outline-none!"/>
 					</InputGroup>
                <ButtonGroup className="">
-                  <Button className="bg-blue-600!">SEND</Button>
+                  <Button className="bg-blue-500! h-full pl-3! pr-3!">Send</Button>
                   <DropdownMenu>
                      <DropdownMenuTrigger asChild>
-                        <Button size="icon-lg" className="bg-blue-600!">
+                        <Button className="bg-blue-500! px-1.5! h-full border-l-1! border-l-black!">
                            <MoreHorizontalIcon />
                         </Button>
                      </DropdownMenuTrigger>
