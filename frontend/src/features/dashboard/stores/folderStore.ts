@@ -14,7 +14,7 @@ export type FolderState = {
 	 *Doesn't contain validation so if you request more data it won't override
 	 *@param parentId if undefined will fetch the collections (top level folders) which don't contain parent_id
 	 */
-	loadMoreFolders: (parentId?: string) => void
+	loadMoreFolders: (parentId?: string) => Promise<void>
 }
 
 let queue = Promise.resolve()

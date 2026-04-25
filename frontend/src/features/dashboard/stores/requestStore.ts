@@ -10,7 +10,7 @@ export type RequestState = {
 	/**
 	 *Doesn't contain validation so if you request more data it won't override
 	 */
-	loadMoreRequests: (folderId: string) => void
+	loadMoreRequests: (folderId: string) => Promise<void>
 }
 
 let queue = Promise.resolve()
