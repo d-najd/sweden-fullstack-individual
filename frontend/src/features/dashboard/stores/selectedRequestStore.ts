@@ -3,10 +3,11 @@ import RequestDto from "@/shared/types/request/request.dto"
 
 export type SelectedRequestState = {
 	selectedRequest?: RequestDto
+	setSelectedRequest: (request: RequestDto) => void
 }
 
 const useSelectedRequest = create<SelectedRequestState>((set) => ({
-	setSelectedItem: (request: RequestDto) => {
+	setSelectedRequest: (request: RequestDto) => {
 		set(() => ({
 			selectedRequest: request,
 		}))

@@ -7,14 +7,20 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import React, { useEffect } from "react"
+import React, { CSSProperties, useEffect } from "react"
 import useFolderStore from "../stores/folderStore"
 import clsx from "clsx"
 import useRequestStore from "../stores/requestStore"
 import FileTreeItem from "../types/FileTreeItem"
 import useFileTreeStore from "../stores/fileTreeStore"
+import { Input } from "@/components/ui/input"
+import { cva } from "class-variance-authority"
+import useSelectedRequest from "../stores/selectedRequestStore"
+import { cn } from "@/lib/utils"
 
-export function CollapsibleFileTree() {
+export function CollapsibleFileTree({
+	className,
+}: React.ComponentProps<"div">) {
 	const { loadMoreFolders } = useFolderStore()
 	const { fileTree } = useFileTreeStore()
 
@@ -23,11 +29,15 @@ export function CollapsibleFileTree() {
 	}, [loadMoreFolders])
 
 	return (
-		<Card className="mx-auto w-full max-w-[16rem] gap-2" size="sm">
+		<Card
+			className={cn("mx-auto w-full max-w-[16rem] gap-2", className)}
+			size="sm"
+		>
 			<CardContent>
+				<SearchBar />
 				<div className="flex flex-col gap-1">
 					{fileTree.map((item) => (
-						<TreeItem key={item.id} fileItem={item} />
+						<TreeItem key={item.id} fileItem={item} level={0} />
 					))}
 				</div>
 			</CardContent>
@@ -35,10 +45,27 @@ export function CollapsibleFileTree() {
 	)
 }
 
-const TreeItem = ({ fileItem }: { fileItem: FileTreeItem }) => {
+function SearchBar() {
+	return <></>
+
+	return (
+		<>
+			<Input />
+		</>
+	)
+}
+
+const TreeItem = ({
+	fileItem,
+	level,
+}: {
+	fileItem: FileTreeItem
+	level: number
+}) => {
 	const [isOpen, setIsOpen] = React.useState(false)
 	const { loadMoreFolders } = useFolderStore()
-	const { loadMoreRequests } = useRequestStore()
+	const { requests, loadMoreRequests } = useRequestStore()
+	const { selectedRequest, setSelectedRequest } = useSelectedRequest()
 
 	useEffect(() => {
 		if (!isOpen) return
@@ -47,6 +74,23 @@ const TreeItem = ({ fileItem }: { fileItem: FileTreeItem }) => {
 		loadMoreFolders(fileItem.id)
 		loadMoreRequests(fileItem.id)
 	}, [fileItem, isOpen, loadMoreFolders, loadMoreRequests])
+
+	const sharedButtonStyleCss = (): CSSProperties => ({
+		paddingLeft: (level + 1) * 16,
+	})
+
+	const sharedButtonStyle = cva(`w-full justify-start`, {
+		variants: {
+			selected: {
+				true: "bg-white/20!",
+				false: "hover:bg-white/10!",
+			},
+		},
+		defaultVariants: {
+			selected: false,
+		},
+	})
+	const selected = selectedRequest && selectedRequest.id === fileItem.id
 
 	if (fileItem.items) {
 		return (
@@ -58,8 +102,9 @@ const TreeItem = ({ fileItem }: { fileItem: FileTreeItem }) => {
 				<CollapsibleTrigger asChild>
 					<Button
 						variant="ghost"
-						size="sm"
-						className="group w-full justify-start transition-none hover:bg-accent hover:text-accent-foreground"
+						size="xs"
+						className={sharedButtonStyle({ selected: selected })}
+						style={sharedButtonStyleCss()}
 					>
 						<ChevronRightIcon
 							className={clsx("transition-transform", {
@@ -69,10 +114,14 @@ const TreeItem = ({ fileItem }: { fileItem: FileTreeItem }) => {
 						{fileItem.name}
 					</Button>
 				</CollapsibleTrigger>
-				<CollapsibleContent className="mt-1 ml-5 style-lyra:ml-4">
-					<div className="flex flex-col gap-1">
+				<CollapsibleContent className="">
+					<div className="">
 						{fileItem.items.map((child) => (
-							<TreeItem key={child.id} fileItem={child} />
+							<TreeItem
+								key={child.id}
+								fileItem={child}
+								level={level + 1}
+							/>
 						))}
 					</div>
 				</CollapsibleContent>
@@ -83,11 +132,15 @@ const TreeItem = ({ fileItem }: { fileItem: FileTreeItem }) => {
 	return (
 		<Button
 			key={fileItem.id}
-			size="sm"
-			className="w-full justify-start gap-2 text-foreground"
+			size="xs"
+			className={sharedButtonStyle({ selected: selected })}
+			style={sharedButtonStyleCss()}
+			onClick={() =>
+				setSelectedRequest(requests.find((o) => o.id === fileItem.id)!)
+			}
 		>
 			<FileIcon />
-			<span>{fileItem.name}</span>
+			{fileItem.name}
 		</Button>
 	)
 }
