@@ -10,7 +10,7 @@ export type RequestState = {
 	/**
 	 *Doesn't contain validation so if you request more data it won't override
 	 */
-	loadMoreRequests: (folderId: string) => Promise<void>
+	loadMoreRequests: (folderId: string, force?: boolean) => Promise<void>
 }
 
 let queue = Promise.resolve()
@@ -20,9 +20,9 @@ const useRequestStore = create<RequestState>()(
 		requests: [],
 		fetchedFolderIds: [],
 
-		loadMoreRequests: async (folderId: string) => {
+		loadMoreRequests: async (folderId: string, force: boolean = false) => {
 			queue = queue.then(async () => {
-				if (get().fetchedFolderIds.includes(folderId)) {
+				if (!force && get().fetchedFolderIds.includes(folderId)) {
 					console.log(
 						`Already fetched requests by folderId ${folderId}`,
 					)
@@ -31,8 +31,16 @@ const useRequestStore = create<RequestState>()(
 
 				const data = await requestApi.getByFolderId(folderId)
 				set((state) => ({
-					requests: [...state.requests, ...data],
-					fetchedFolderIds: [...state.fetchedFolderIds, folderId],
+					requests: [
+						...state.requests.filter(
+							(o) => o.folder_id !== folderId,
+						),
+						...data,
+					],
+					fetchedFolderIds: [
+						...state.fetchedFolderIds.filter((o) => o !== folderId),
+						folderId,
+					],
 				}))
 			})
 		},

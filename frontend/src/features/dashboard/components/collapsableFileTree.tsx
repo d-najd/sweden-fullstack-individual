@@ -1,4 +1,9 @@
-import { ChevronRightIcon, FileIcon } from "lucide-react"
+import {
+	ChevronRightIcon,
+	FileIcon,
+	MoreHorizontalIcon,
+	PlusIcon,
+} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -17,6 +22,12 @@ import { Input } from "@/components/ui/input"
 import { cva } from "class-variance-authority"
 import useSelectedRequest from "../stores/selectedRequestStore"
 import { cn } from "@/lib/utils"
+import { ButtonGroup } from "@chakra-ui/react"
+import Row from "@/components/Row"
+import requestMethodApi from "@/api/requestMethod"
+import requestApi from "@/api/request"
+import requestMethod from "@/api/requestMethod"
+import useRequestMethodStore from "../stores/requestMethodStore"
 
 export function CollapsibleFileTree({
 	className,
@@ -66,6 +77,7 @@ const TreeItem = ({
 	const { loadMoreFolders } = useFolderStore()
 	const { requests, loadMoreRequests } = useRequestStore()
 	const { selectedRequest, setSelectedRequest } = useSelectedRequest()
+	const { requestMethods } = useRequestMethodStore()
 
 	useEffect(() => {
 		if (!isOpen) return
@@ -90,8 +102,12 @@ const TreeItem = ({
 			selected: false,
 		},
 	})
-	const selected = selectedRequest && selectedRequest.id === fileItem.id
 
+	const rightButtonsActionsStyle = cn(
+		"opacity-0! group-hover:opacity-30! hover:opacity-75!",
+	)
+
+	const selected = selectedRequest && selectedRequest.id === fileItem.id
 	if (fileItem.items) {
 		return (
 			<Collapsible
@@ -100,19 +116,56 @@ const TreeItem = ({
 				key={fileItem.id}
 			>
 				<CollapsibleTrigger asChild>
-					<Button
-						variant="ghost"
-						size="xs"
-						className={sharedButtonStyle({ selected: selected })}
+					<ButtonGroup
+						className={cn(
+							sharedButtonStyle({ selected: selected }),
+							"group",
+						)}
 						style={sharedButtonStyleCss()}
 					>
-						<ChevronRightIcon
-							className={clsx("transition-transform", {
-								"rotate-90": isOpen,
-							})}
-						/>
-						{fileItem.name}
-					</Button>
+						<Button variant="ghost" size="xs">
+							<ChevronRightIcon
+								className={clsx("transition-transform", {
+									"rotate-90": isOpen,
+								})}
+							/>
+							{fileItem.name}
+						</Button>
+						<Row className="ml-auto! px-2! gap-2!">
+							<Button
+								size="xs"
+								onClick={(e) => {
+									e.stopPropagation()
+
+									const getRequestMethod =
+										requestMethods.find(
+											(o) => o.name === "GET",
+										)!
+
+									requestApi
+										.create({
+											name: "New Request",
+											folder_id: fileItem.id,
+											request_method_id:
+												getRequestMethod.id,
+										})
+										.then(() => {
+											loadMoreRequests(fileItem.id, true)
+										})
+								}}
+								className={rightButtonsActionsStyle}
+							>
+								<PlusIcon />
+							</Button>
+							<Button
+								size="xs"
+								onClick={(e) => e.stopPropagation()}
+								className={rightButtonsActionsStyle}
+							>
+								<MoreHorizontalIcon />
+							</Button>
+						</Row>
+					</ButtonGroup>
 				</CollapsibleTrigger>
 				<CollapsibleContent className="">
 					<div className="">
@@ -130,17 +183,18 @@ const TreeItem = ({
 	}
 
 	return (
-		<Button
+		<ButtonGroup
 			key={fileItem.id}
-			size="xs"
 			className={sharedButtonStyle({ selected: selected })}
 			style={sharedButtonStyleCss()}
 			onClick={() =>
 				setSelectedRequest(requests.find((o) => o.id === fileItem.id)!)
 			}
 		>
-			<FileIcon />
-			{fileItem.name}
-		</Button>
+			<Button size="xs">
+				<FileIcon />
+				{fileItem.name}
+			</Button>
+		</ButtonGroup>
 	)
 }
