@@ -5,6 +5,7 @@ import {
 	PlusIcon,
 } from "lucide-react"
 
+import Row from "@/components/Row"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -12,22 +13,25 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import React, { CSSProperties, useEffect } from "react"
-import useFolderStore from "../stores/folderStore"
-import clsx from "clsx"
-import useRequestStore from "../stores/requestStore"
-import FileTreeItem from "../types/FileTreeItem"
-import useFileTreeStore from "../stores/fileTreeStore"
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { cva } from "class-variance-authority"
-import useSelectedRequest from "../stores/selectedRequestStore"
 import { cn } from "@/lib/utils"
 import { ButtonGroup } from "@chakra-ui/react"
-import Row from "@/components/Row"
-import requestMethodApi from "@/api/requestMethod"
-import requestApi from "@/api/request"
-import requestMethod from "@/api/requestMethod"
-import useRequestMethodStore from "../stores/requestMethodStore"
+import { cva } from "class-variance-authority"
+import clsx from "clsx"
+import React, { CSSProperties, useEffect, useRef } from "react"
+import useFileTreeStore from "../stores/fileTreeStore"
+import useFolderStore from "../stores/folderStore"
+import useRequestStore from "../stores/requestStore"
+import useSelectedRequest from "../stores/selectedRequestStore"
+import FileTreeItem from "../types/FileTreeItem"
+import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"
 
 export function CollapsibleFileTree({
 	className,
@@ -66,6 +70,25 @@ function SearchBar() {
 	)
 }
 
+function DropdownMenuItemCustom({
+	className,
+	inset,
+	variant = "default",
+	...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & {
+	inset?: boolean
+	variant?: "default" | "destructive"
+}) {
+	return (
+		<DropdownMenuItem
+			className={cn(className, "px-2! py-2! focus:outline-hidden!")}
+			inset={inset}
+			variant={variant}
+			{...props}
+		/>
+	)
+}
+
 const TreeItem = ({
 	fileItem,
 	level,
@@ -74,10 +97,9 @@ const TreeItem = ({
 	level: number
 }) => {
 	const [isOpen, setIsOpen] = React.useState(false)
-	const { loadMoreFolders } = useFolderStore()
-	const { requests, loadMoreRequests } = useRequestStore()
+	const { createFolder, deleteFolder, loadMoreFolders } = useFolderStore()
+	const { requests, createRequest, loadMoreRequests } = useRequestStore()
 	const { selectedRequest, setSelectedRequest } = useSelectedRequest()
-	const { requestMethods } = useRequestMethodStore()
 
 	useEffect(() => {
 		if (!isOpen) return
@@ -137,38 +159,84 @@ const TreeItem = ({
 								onClick={(e) => {
 									e.stopPropagation()
 
-									const getRequestMethod =
-										requestMethods.find(
-											(o) => o.name === "GET",
-										)!
-
-									requestApi
-										.create({
-											name: "New Request",
-											folder_id: fileItem.id,
-											request_method_id:
-												getRequestMethod.id,
-										})
-										.then(() => {
-											loadMoreRequests(fileItem.id, true)
-										})
+									createRequest(fileItem.id)
 								}}
 								className={rightButtonsActionsStyle}
 							>
 								<PlusIcon />
 							</Button>
-							<Button
-								size="xs"
-								onClick={(e) => e.stopPropagation()}
-								className={rightButtonsActionsStyle}
-							>
-								<MoreHorizontalIcon />
-							</Button>
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button
+										size="xs"
+										onClick={(e) => e.stopPropagation()}
+										className={rightButtonsActionsStyle}
+									>
+										<MoreHorizontalIcon />
+									</Button>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent>
+									<DropdownMenuItemCustom
+										onClick={(e) => {
+											e.stopPropagation()
+
+											createRequest(fileItem.id)
+										}}
+									>
+										Add Request
+									</DropdownMenuItemCustom>
+									<DropdownMenuItemCustom
+										onClick={(e) => {
+											e.stopPropagation()
+
+											createFolder(fileItem.id)
+										}}
+									>
+										Add Folder
+									</DropdownMenuItemCustom>
+									<DropdownMenuSeparator />
+									<DropdownMenuItemCustom>
+										Run
+									</DropdownMenuItemCustom>
+									<DropdownMenuSeparator />
+									<DropdownMenuItemCustom>
+										Share
+									</DropdownMenuItemCustom>
+									<DropdownMenuItemCustom>
+										Copy Link
+									</DropdownMenuItemCustom>
+									<DropdownMenuSeparator />
+									<DropdownMenuItemCustom
+										onClick={(e) => {
+											e.stopPropagation()
+
+											setRenaming(true)
+										}}
+									>
+										Rename
+									</DropdownMenuItemCustom>
+									<DropdownMenuItemCustom>
+										Copy
+									</DropdownMenuItemCustom>
+									<DropdownMenuItemCustom>
+										Duplicate
+									</DropdownMenuItemCustom>
+									<DropdownMenuItemCustom
+										onClick={(e) => {
+											e.stopPropagation()
+
+											deleteFolder(fileItem.id)
+										}}
+									>
+										Delete
+									</DropdownMenuItemCustom>
+								</DropdownMenuContent>
+							</DropdownMenu>
 						</Row>
 					</ButtonGroup>
 				</CollapsibleTrigger>
-				<CollapsibleContent className="">
-					<div className="">
+				<CollapsibleContent>
+					<div>
 						{fileItem.items.map((child) => (
 							<TreeItem
 								key={child.id}

@@ -18,9 +18,7 @@ class RequestApi {
 	}
 
 	async delete(id: string) {
-		await axios.delete(this.path, {
-			params: { id },
-		})
+		await axios.delete(`${this.path}/${id}`)
 	}
 }
 
