@@ -15,7 +15,7 @@ import {
 import { cva } from "class-variance-authority"
 import clsx from "clsx"
 import { ChevronRightIcon, SaveIcon } from "lucide-react"
-import useSelectedRequest from "../stores/selectedTreeStoreItemStore"
+import useSelectedRequest from "../stores/selectedRequestStore"
 import { useState } from "react"
 
 const optionsButtonStyle = cva("p-1!", {
@@ -39,13 +39,13 @@ const RequestMenuSetting = {
 	Settings: "Settings",
 }
 
-function RequestMenu() {
+function RequestMenu({ className }: React.ComponentProps<"div">) {
 	const [selectedMenuSetting] = useState(RequestMenuSetting.Body)
 	const requestMenuSettingsValues = Object.values(RequestMenuSetting)
 
 	return (
 		<>
-			<Column>
+			<Column className={className}>
 				<Row>
 					<NavigationBar />
 				</Row>
