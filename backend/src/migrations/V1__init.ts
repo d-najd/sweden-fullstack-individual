@@ -1,5 +1,23 @@
 import db from "@/config/database"
 
+export const requestsSchemaProperties = {
+	_id: { bsonType: "objectId" },
+	name: {
+		bsonType: "string",
+		description: "Name of the request",
+	},
+	url: {
+		bsonType: ["string", "null"],
+		description: "URl that the request will request from, may be null",
+	},
+	folder_id: {
+		bsonType: "objectId",
+	},
+	request_method_id: {
+		bsonType: "objectId",
+	},
+}
+
 export async function up() {
 	const requestMethodsName = "request_methods"
 	await db.createCollection(requestMethodsName, {
@@ -59,22 +77,7 @@ export async function up() {
 				bsonType: "object",
 				additionalProperties: false,
 				properties: {
-					_id: { bsonType: "objectId" },
-					name: {
-						bsonType: "string",
-						description: "Name of the request",
-					},
-					url: {
-						bsonType: ["string", "null"],
-						description:
-							"URl that the request will request from, may be null",
-					},
-					folder_id: {
-						bsonType: "objectId",
-					},
-					request_method_id: {
-						bsonType: "objectId",
-					},
+					...requestsSchemaProperties,
 				},
 			},
 		},

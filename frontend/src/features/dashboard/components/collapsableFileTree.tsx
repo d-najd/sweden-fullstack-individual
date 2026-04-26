@@ -117,7 +117,7 @@ const TreeItem = ({
 	const {
 		requests,
 		createRequest,
-		renameRequest,
+		updateRequest,
 		deleteRequest,
 		loadMoreRequests,
 	} = useRequestStore()
@@ -403,7 +403,7 @@ const TreeItem = ({
 															fileItem.id,
 													)
 
-												renameRequest(fileItem.id, {
+												updateRequest(fileItem.id, {
 													...prevRequest,
 													name: newName,
 												})

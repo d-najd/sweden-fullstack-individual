@@ -14,7 +14,7 @@ export type RequestState = {
 	 */
 	loadMoreRequests: (folderId: string, force?: boolean) => Promise<void>
 	createRequest: (folderId: string) => Promise<void>
-	renameRequest: (id: string, dto: RequestUpdate) => Promise<void>
+	updateRequest: (id: string, dto: RequestUpdate) => Promise<void>
 	deleteRequest: (id: string) => Promise<void>
 }
 
@@ -65,7 +65,7 @@ const useRequestStore = create<RequestState>()(
 				await get().loadMoreRequests(folderId, true)
 			})
 		},
-		renameRequest: async (id: string, dto: RequestUpdate) => {
+		updateRequest: async (id: string, dto: RequestUpdate) => {
 			queue = queue.then(async () => {
 				const updatedDto = await requestApi.update(id, dto)
 
@@ -78,7 +78,6 @@ const useRequestStore = create<RequestState>()(
 				}))
 			})
 		},
-
 		deleteRequest: async (id: string) => {
 			queue.then(async () => {
 				await requestApi.delete(id)

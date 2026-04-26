@@ -2,14 +2,18 @@ import Row from "@/components/Row"
 import { CollapsibleFileTree } from "./components/collapsableFileTree"
 import RequestMenu from "./components/requestMenu"
 import Column from "@/components/Column"
+import RequestBody from "./components/requestBody"
 
 export default function DashboardPage() {
 	return (
 		<>
 			<Column className="pt-24!">
 				<Row>
-					<CollapsibleFileTree className="h-screen!" />
-					<RequestMenu className="w-screen!" />
+					<CollapsibleFileTree className="h-screen! w-fit! min-w-60" />
+					<Column className="flex-1 px-4!">
+						<RequestMenu className="" />
+						<RequestBody />
+					</Column>
 				</Row>
 			</Column>
 		</>

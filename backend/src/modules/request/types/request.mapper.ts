@@ -28,6 +28,12 @@ export default class RequestMapper {
 			entity.request_method_id = new ObjectId(dto.request_method_id)
 		}
 
+		if (dto.json_body !== undefined) {
+			entity.json_body = dto.json_body
+		} else {
+			entity.json_body = null
+		}
+
 		return entity
 	}
 
@@ -38,6 +44,7 @@ export default class RequestMapper {
 			url: entity.url ?? undefined,
 			folder_id: entity.folder_id.toString(),
 			request_method_id: entity.request_method_id.toString(),
+			json_body: entity.json_body ?? undefined,
 		}
 	}
 }
