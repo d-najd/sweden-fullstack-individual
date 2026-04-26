@@ -357,7 +357,6 @@ const TreeItem = ({
 						<DropdownMenuItemCustom>
 							Copy Link
 						</DropdownMenuItemCustom>
-						<DropdownMenuItemCustom>Rename</DropdownMenuItemCustom>
 						<DropdownMenuItemCustom>Copy</DropdownMenuItemCustom>
 						<DropdownMenuItemCustom>
 							Duplicate
