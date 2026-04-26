@@ -3,6 +3,7 @@ import requestApi from "@/api/request"
 import RequestDto from "@/shared/types/request/request.dto"
 import { subscribeWithSelector } from "zustand/middleware"
 import useRequestMethodStore from "./requestMethodStore"
+import RequestUpdate from "@/shared/types/request/request.update"
 
 export type RequestState = {
 	requests: RequestDto[]
@@ -13,6 +14,8 @@ export type RequestState = {
 	 */
 	loadMoreRequests: (folderId: string, force?: boolean) => Promise<void>
 	createRequest: (folderId: string) => Promise<void>
+	renameRequest: (id: string, dto: RequestUpdate) => Promise<void>
+	deleteRequest: (id: string) => Promise<void>
 }
 
 let queue = Promise.resolve()
@@ -60,6 +63,30 @@ const useRequestStore = create<RequestState>()(
 					request_method_id: getRequestMethod.id,
 				})
 				await get().loadMoreRequests(folderId, true)
+			})
+		},
+		renameRequest: async (id: string, dto: RequestUpdate) => {
+			queue = queue.then(async () => {
+				const updatedDto = await requestApi.update(id, dto)
+
+				set((state) => ({
+					requests: [
+						...state.requests.filter((o) => o.id !== id),
+						updatedDto,
+					],
+					fetchedFolderIds: state.fetchedFolderIds,
+				}))
+			})
+		},
+
+		deleteRequest: async (id: string) => {
+			queue.then(async () => {
+				await requestApi.delete(id)
+
+				set((state) => ({
+					requests: [...state.requests.filter((o) => o.id !== id)],
+					fetchedFolderIds: state.fetchedFolderIds,
+				}))
 			})
 		},
 	})),

@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import requestService from "./request.service"
 import RequestCreate from "@/shared/types/request/request.create"
+import RequestUpdate from "@/shared/types/request/request.update"
 
 class RequestController {
 	async getByFolderId(req: Request, res: Response) {
@@ -21,6 +22,19 @@ class RequestController {
 			const newDto = await requestService.create(body)
 
 			res.status(201).json(newDto)
+		} catch (error) {
+			console.error(error)
+			res.status(500).json({ error: "Internal server error" })
+		}
+	}
+
+	async update(req: Request, res: Response) {
+		try {
+			const id = req.params.id as string
+			const body = req.body as RequestUpdate
+
+			const updatedDto = await requestService.update(id, body)
+			res.status(200).json(updatedDto)
 		} catch (error) {
 			console.error(error)
 			res.status(500).json({ error: "Internal server error" })

@@ -1,7 +1,6 @@
 import {
 	ChevronRightIcon,
 	FileIcon,
-	Inbox,
 	MoreHorizontalIcon,
 	PlusIcon,
 } from "lucide-react"
@@ -115,7 +114,13 @@ const TreeItem = ({
 		deleteFolder,
 		loadMoreFolders,
 	} = useFolderStore()
-	const { requests, createRequest, loadMoreRequests } = useRequestStore()
+	const {
+		requests,
+		createRequest,
+		renameRequest,
+		deleteRequest,
+		loadMoreRequests,
+	} = useRequestStore()
 	const { selectedRequest, setSelectedRequest } = useSelectedRequest()
 
 	useEffect(() => {
@@ -323,7 +328,7 @@ const TreeItem = ({
 	return (
 		<ButtonGroup
 			key={fileItem.id}
-			className={sharedButtonStyle({ selected: selected })}
+			className={cn(sharedButtonStyle({ selected: selected }), "group")}
 			style={sharedButtonStyleCss()}
 			onClick={() =>
 				setSelectedRequest(requests.find((o) => o.id === fileItem.id)!)
@@ -333,6 +338,96 @@ const TreeItem = ({
 				<FileIcon />
 				{fileItem.name}
 			</Button>
+			<Row className="ml-auto! px-2! gap-2!">
+				<DropdownMenu>
+					<DropdownMenuTrigger>
+						<Button
+							size="xs"
+							className={cn(rightButtonsActionsStyle)}
+						>
+							<MoreHorizontalIcon />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuItemCustom>
+							Add Example
+						</DropdownMenuItemCustom>
+						<DropdownMenuSeparator />
+						<DropdownMenuItemCustom>Share</DropdownMenuItemCustom>
+						<DropdownMenuItemCustom>
+							Copy Link
+						</DropdownMenuItemCustom>
+						<DropdownMenuItemCustom>Rename</DropdownMenuItemCustom>
+						<DropdownMenuItemCustom>Copy</DropdownMenuItemCustom>
+						<DropdownMenuItemCustom>
+							Duplicate
+						</DropdownMenuItemCustom>
+						<Dialog>
+							<DialogTrigger asChild>
+								<DropdownMenuItemCustom
+									onSelect={(e) => {
+										e.preventDefault()
+									}}
+									onClick={(e) => {
+										e.stopPropagation()
+
+										setNewName(fileItem.name)
+									}}
+								>
+									Rename
+								</DropdownMenuItemCustom>
+							</DialogTrigger>
+							<DialogContent
+								onClick={(e) => {
+									e.stopPropagation()
+								}}
+							>
+								<DialogHeader>
+									<DialogTitle>Rename</DialogTitle>
+								</DialogHeader>
+								<Input
+									autoFocus
+									value={newName}
+									onChange={(o) => setNewName(o.target.value)}
+								/>
+								<DialogFooter>
+									<DialogClose asChild>
+										<Button
+											className="pr-4!"
+											onClick={(e) => {
+												e.stopPropagation()
+
+												const prevRequest =
+													requests.find(
+														(o) =>
+															o.id ===
+															fileItem.id,
+													)!
+
+												renameRequest(fileItem.id, {
+													...prevRequest,
+													name: newName,
+												})
+											}}
+										>
+											Rename
+										</Button>
+									</DialogClose>
+								</DialogFooter>
+							</DialogContent>
+						</Dialog>
+						<DropdownMenuItemCustom
+							onClick={(e) => {
+								e.stopPropagation()
+
+								deleteRequest(fileItem.id)
+							}}
+						>
+							Delete
+						</DropdownMenuItemCustom>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</Row>
 		</ButtonGroup>
 	)
 }

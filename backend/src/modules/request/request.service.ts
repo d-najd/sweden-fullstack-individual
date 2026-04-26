@@ -4,6 +4,7 @@ import requestRepository from "./request.repository"
 import RequestEntity from "./types/request.entity"
 import RequestMapper from "./types/request.mapper"
 import { client } from "@/config/database"
+import RequestUpdate from "@/shared/types/request/request.update"
 
 class RequestService {
 	async getByFolderId(id: string): Promise<RequestDto[]> {
@@ -33,6 +34,27 @@ class RequestService {
 		}
 
 		return RequestMapper.toDto(createdEntity)
+	}
+
+	async update(id: string, dto: RequestUpdate) {
+		const entity = RequestMapper.toEntity(dto)
+		const session = client.startSession()
+
+		let updatedEntity: RequestEntity
+		try {
+			session.startTransaction()
+
+			await requestRepository.update(id, entity)
+
+			updatedEntity = await requestRepository.getById(id)
+		} catch (err) {
+			await session.abortTransaction()
+			throw err
+		} finally {
+			await session.endSession()
+		}
+
+		return RequestMapper.toDto(updatedEntity)
 	}
 
 	async delete(id: string) {
