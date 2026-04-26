@@ -1,6 +1,7 @@
 import envConfig from "@/config/env"
 import RequestCreate from "@/shared/types/request/request.create"
 import RequestDto from "@/shared/types/request/request.dto"
+import RequestUpdate from "@/shared/types/request/request.update"
 import axios from "axios"
 
 class RequestApi {
@@ -11,16 +12,20 @@ class RequestApi {
 		return data as RequestDto[]
 	}
 
-	async create(request: RequestCreate) {
-		const { data } = await axios.post(this.path, request)
+	async create(dto: RequestCreate) {
+		const { data } = await axios.post(this.path, dto)
+
+		return data as RequestDto
+	}
+
+	async update(id: string, dto: RequestUpdate) {
+		const { data } = await axios.put(`${this.path}/${id}`, dto)
 
 		return data as RequestDto
 	}
 
 	async delete(id: string) {
-		await axios.delete(this.path, {
-			params: { id },
-		})
+		await axios.delete(`${this.path}/${id}`)
 	}
 }
 

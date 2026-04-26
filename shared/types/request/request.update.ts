@@ -1,4 +1,4 @@
-type RequestCreate = {
+type RequestUpdate = {
 	url?: string
 	name: string
 	folder_id: string
@@ -6,4 +6,4 @@ type RequestCreate = {
 	json_body?: string
 }
 
-export default RequestCreate
+export default RequestUpdate

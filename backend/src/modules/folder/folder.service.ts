@@ -4,6 +4,7 @@ import FolderMapper from "./types/folder.mapper"
 import FolderCreate from "@/shared/types/folder/folder.create"
 import FolderEntity from "./types/folder.entity"
 import { client } from "@/config/database"
+import FolderUpdate from "@/shared/types/folder/folder.update"
 
 class FolderService {
 	async getByParentId(id?: string): Promise<FolderDto[]> {
@@ -33,6 +34,27 @@ class FolderService {
 		}
 
 		return FolderMapper.toDto(createdEntity)
+	}
+
+	async update(id: string, dto: FolderUpdate) {
+		const entity = FolderMapper.toEntity(dto)
+		const session = client.startSession()
+
+		let updatedEntity: FolderEntity
+		try {
+			session.startTransaction()
+
+			await folderRepository.update(id, entity)
+
+			updatedEntity = await folderRepository.getById(id)
+		} catch (err) {
+			await session.abortTransaction()
+			throw err
+		} finally {
+			await session.endSession()
+		}
+
+		return FolderMapper.toDto(updatedEntity)
 	}
 
 	async delete(id: string) {
