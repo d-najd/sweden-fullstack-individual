@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
 import {
 	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -19,6 +21,9 @@ import useSelectedRequestStore from "../stores/selectedRequestStore"
 import { useMemo, useState } from "react"
 import { cn } from "@/lib/utils"
 import useRequestStore from "../stores/requestStore"
+import useRequestMethodStore from "../stores/requestMethodStore"
+import requestService from "../services/requestService"
+import useInvokedResponseStore from "../stores/invokedRequestStore"
 
 const optionsButtonStyle = cva("p-1!", {
 	variants: {
@@ -44,9 +49,16 @@ const RequestMenuSetting = {
 function RequestMenu({ className }: React.ComponentProps<"div">) {
 	const [selectedMenuSetting] = useState(RequestMenuSetting.Body)
 	const { selectedRequest, setSelectedRequest } = useSelectedRequestStore()
+	const { requestMethods } = useRequestMethodStore()
+	const { setInvokedResponse } = useInvokedResponseStore()
 	const requestMenuSettingsValues = Object.values(RequestMenuSetting)
 
 	const sendButtonStyle = cn("bg-blue-500! hover:bg-blue-700!")
+
+	const requestMethodText = selectedRequest?.request_method_id
+		? requestMethods.find((o) => o.id === selectedRequest.request_method_id)
+				.name
+		: "GET"
 
 	return (
 		<>
@@ -57,16 +69,40 @@ function RequestMenu({ className }: React.ComponentProps<"div">) {
 				<Row>
 					<InputGroup className="outline-solid! outline-teal-700! outline-1!">
 						<InputGroupAddon className="outline-none!">
-							<InputGroupButton className="outline-none!">
-								<div className="w-1.5"></div>
-								<p>GET</p>
-								<div className="w-10"></div>
-								<ChevronRightIcon className="rotate-90" />
-								<div className="w-1 h-full border-solid! border-teal-900! border-l-2! "></div>
-							</InputGroupButton>
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<InputGroupButton className="outline-none!">
+										<div className="w-1.5"></div>
+										<p>{requestMethodText}</p>
+										<div className="w-10"></div>
+										<ChevronRightIcon className="rotate-90" />
+										<div className="w-1 h-full border-solid! border-teal-900! border-l-2! "></div>
+									</InputGroupButton>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent>
+									{requestMethods.map((requestMethod) => {
+										return (
+											<DropdownMenuItem
+												key={requestMethod.id}
+												onClick={() => {
+													if (!selectedRequest) return
+
+													setSelectedRequest({
+														...selectedRequest,
+														request_method_id:
+															requestMethod.id,
+													})
+												}}
+											>
+												{requestMethod.name}
+											</DropdownMenuItem>
+										)
+									})}
+								</DropdownMenuContent>
+							</DropdownMenu>
 						</InputGroupAddon>
 						<InputGroupInput
-							value={selectedRequest.url ?? ""}
+							value={selectedRequest?.url ?? ""}
 							onChange={(o) =>
 								setSelectedRequest({
 									...selectedRequest,
@@ -81,6 +117,13 @@ function RequestMenu({ className }: React.ComponentProps<"div">) {
 					</InputGroup>
 					<ButtonGroup className="pl-1.5!">
 						<Button
+							onClick={() => {
+								requestService
+									.invokeRequest(selectedRequest)
+									.then((response) => {
+										setInvokedResponse(response)
+									})
+							}}
 							className={cn(
 								sendButtonStyle,
 								"h-full pl-4! pr-4!",

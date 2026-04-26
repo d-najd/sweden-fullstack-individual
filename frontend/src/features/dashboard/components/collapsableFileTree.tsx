@@ -28,7 +28,7 @@ import React, { CSSProperties, useEffect } from "react"
 import useFileTreeStore from "../stores/fileTreeStore"
 import useFolderStore from "../stores/folderStore"
 import useRequestStore from "../stores/requestStore"
-import useSelectedRequest from "../stores/selectedRequestStore"
+import useSelectedRequestStore from "../stores/selectedRequestStore"
 import FileTreeItem from "../types/FileTreeItem"
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"
 import { ButtonGroup } from "@/components/ui/button-group"
@@ -110,7 +110,7 @@ const TreeItem = ({
 	const {
 		folders,
 		createFolder,
-		renameFolder,
+		updateFolder: renameFolder,
 		deleteFolder,
 		loadMoreFolders,
 	} = useFolderStore()
@@ -121,7 +121,7 @@ const TreeItem = ({
 		deleteRequest,
 		loadMoreRequests,
 	} = useRequestStore()
-	const { selectedRequest, setSelectedRequest } = useSelectedRequest()
+	const { selectedRequest, setSelectedRequest } = useSelectedRequestStore()
 
 	useEffect(() => {
 		if (!isOpen) return

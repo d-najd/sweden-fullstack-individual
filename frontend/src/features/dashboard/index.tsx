@@ -3,6 +3,7 @@ import { CollapsibleFileTree } from "./components/collapsableFileTree"
 import RequestMenu from "./components/requestMenu"
 import Column from "@/components/Column"
 import RequestBody from "./components/requestBody"
+import ResponseBody from "./components/responseBody"
 
 export default function DashboardPage() {
 	return (
@@ -13,6 +14,7 @@ export default function DashboardPage() {
 					<Column className="flex-1 px-4!">
 						<RequestMenu className="" />
 						<RequestBody />
+						<ResponseBody />
 					</Column>
 				</Row>
 			</Column>
