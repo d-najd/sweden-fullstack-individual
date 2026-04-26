@@ -14,16 +14,15 @@ import {
 	InputGroupButton,
 	InputGroupInput,
 } from "@/components/ui/input-group"
-import { cva } from "class-variance-authority"
-import clsx from "clsx"
-import { ChevronRightIcon, SaveIcon } from "lucide-react"
-import useSelectedRequestStore from "../stores/selectedRequestStore"
-import { useMemo, useState } from "react"
 import { cn } from "@/lib/utils"
-import useRequestStore from "../stores/requestStore"
-import useRequestMethodStore from "../stores/requestMethodStore"
+import { cva } from "class-variance-authority"
+import { ChevronRightIcon } from "lucide-react"
+import { useState } from "react"
 import requestService from "../services/requestService"
 import useInvokedResponseStore from "../stores/invokedRequestStore"
+import useRequestMethodStore from "../stores/requestMethodStore"
+import useSelectedRequestStore from "../stores/selectedRequestStore"
+import RequestTopBar from "./requestTopBar"
 
 const optionsButtonStyle = cva("p-1!", {
 	variants: {
@@ -63,9 +62,7 @@ function RequestMenu({ className }: React.ComponentProps<"div">) {
 	return (
 		<>
 			<Column className={className}>
-				<Row>
-					<NavigationBar />
-				</Row>
+				<RequestTopBar className="pb-1.5!" />
 				<Row>
 					<InputGroup className="outline-solid! outline-teal-700! outline-1!">
 						<InputGroupAddon className="outline-none!">
@@ -160,114 +157,6 @@ function RequestMenu({ className }: React.ComponentProps<"div">) {
 					})}
 				</ButtonGroup>
 			</Column>
-		</>
-	)
-}
-
-type NavigationBarItemProps = {
-	text: string
-	isLast: boolean
-	onClick: () => void
-}
-
-function NavigationBar() {
-	const { selectedRequest: selectedTreeItem } = useSelectedRequestStore()
-	const { requests, updateRequest } = useRequestStore()
-	const { selectedRequest } = useSelectedRequestStore()
-	const requestModified = useMemo(() => {
-		if (!selectedRequest) return false
-
-		const storedRequest = requests.find((o) => o.id === selectedRequest.id)
-		if (!storedRequest) return false
-
-		return JSON.stringify(storedRequest) !== JSON.stringify(selectedRequest)
-	}, [requests, selectedRequest])
-
-	const itemTree: NavigationBarItemProps[] = []
-
-	if (selectedTreeItem) {
-		itemTree.push({
-			text: selectedTreeItem.name,
-			isLast: true,
-			onClick: () => {},
-		})
-	} else {
-		itemTree.push({
-			text: "New Request",
-			isLast: true,
-			onClick: () => {},
-		})
-	}
-
-	const saveButtonStyle = cva("py-0.5! px-1.5!", {
-		variants: {
-			enabled: {
-				true: "hover:bg-white/40!",
-				false: "opacity-30 hover:bg-white/20!",
-			},
-		},
-		defaultVariants: {
-			enabled: true,
-		},
-	})
-
-	return (
-		<>
-			{itemTree.map((o, index) => {
-				const isLast = index === itemTree.length - 1
-				return (
-					<>
-						<NavigationBarItem
-							text={o.text}
-							isLast={isLast}
-							onClick={() => {}}
-						/>
-					</>
-				)
-			})}
-			<Row className="ml-auto!">
-				<ButtonGroup className="items-center">
-					<Button
-						onClick={() => {
-							if (!requestModified) return
-
-							updateRequest(selectedRequest.id, selectedRequest)
-						}}
-						className={saveButtonStyle({
-							enabled: requestModified,
-						})}
-					>
-						<SaveIcon />
-						Save
-					</Button>
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button
-								className={saveButtonStyle({ enabled: true })}
-							>
-								<ChevronRightIcon className="size-3.25! rotate-90" />
-							</Button>
-						</DropdownMenuTrigger>
-					</DropdownMenu>
-				</ButtonGroup>
-			</Row>
-		</>
-	)
-}
-
-function NavigationBarItem({ text, isLast, onClick }: NavigationBarItemProps) {
-	return (
-		<>
-			<Button onClick={onClick}>
-				<p
-					className={clsx("", {
-						"text-muted-foreground": !isLast,
-					})}
-				>
-					{text}
-				</p>
-			</Button>
-			{!isLast && <ChevronRightIcon />}
 		</>
 	)
 }
