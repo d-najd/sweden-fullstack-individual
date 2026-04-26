@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import folderService from "./folder.service"
 import FolderCreate from "@/shared/types/folder/folder.create"
+import FolderUpdate from "@/shared/types/folder/folder.update"
 
 class FolderController {
 	async getByParentId(req: Request, res: Response) {
@@ -21,9 +22,22 @@ class FolderController {
 	async create(req: Request, res: Response) {
 		try {
 			const body = req.body as FolderCreate
-			const newUser = await folderService.create(body)
+			const newFolder = await folderService.create(body)
 
-			res.status(201).json(newUser)
+			res.status(201).json(newFolder)
+		} catch (error) {
+			console.error(error)
+			res.status(500).json({ error: "Internal server error" })
+		}
+	}
+
+	async update(req: Request, res: Response) {
+		try {
+			const id = req.params.id as string
+			const body = req.body as FolderUpdate
+
+			const updatedFolder = await folderService.update(id, body)
+			res.status(200).json(updatedFolder)
 		} catch (error) {
 			console.error(error)
 			res.status(500).json({ error: "Internal server error" })

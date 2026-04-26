@@ -1,6 +1,7 @@
 import {
 	ChevronRightIcon,
 	FileIcon,
+	Inbox,
 	MoreHorizontalIcon,
 	PlusIcon,
 } from "lucide-react"
@@ -22,16 +23,25 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import { ButtonGroup } from "@chakra-ui/react"
 import { cva } from "class-variance-authority"
 import clsx from "clsx"
-import React, { CSSProperties, useEffect, useRef } from "react"
+import React, { CSSProperties, useEffect } from "react"
 import useFileTreeStore from "../stores/fileTreeStore"
 import useFolderStore from "../stores/folderStore"
 import useRequestStore from "../stores/requestStore"
 import useSelectedRequest from "../stores/selectedRequestStore"
 import FileTreeItem from "../types/FileTreeItem"
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"
+import { ButtonGroup } from "@/components/ui/button-group"
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog"
 
 export function CollapsibleFileTree({
 	className,
@@ -97,7 +107,14 @@ const TreeItem = ({
 	level: number
 }) => {
 	const [isOpen, setIsOpen] = React.useState(false)
-	const { createFolder, deleteFolder, loadMoreFolders } = useFolderStore()
+	const [newName, setNewName] = React.useState(fileItem.name)
+	const {
+		folders,
+		createFolder,
+		renameFolder,
+		deleteFolder,
+		loadMoreFolders,
+	} = useFolderStore()
 	const { requests, createRequest, loadMoreRequests } = useRequestStore()
 	const { selectedRequest, setSelectedRequest } = useSelectedRequest()
 
@@ -206,15 +223,68 @@ const TreeItem = ({
 										Copy Link
 									</DropdownMenuItemCustom>
 									<DropdownMenuSeparator />
-									<DropdownMenuItemCustom
-										onClick={(e) => {
-											e.stopPropagation()
+									<Dialog>
+										<DialogTrigger asChild>
+											<DropdownMenuItemCustom
+												onSelect={(e) => {
+													e.preventDefault()
+												}}
+												onClick={(e) => {
+													e.stopPropagation()
 
-											setRenaming(true)
-										}}
-									>
-										Rename
-									</DropdownMenuItemCustom>
+													setNewName(fileItem.name)
+												}}
+											>
+												Rename
+											</DropdownMenuItemCustom>
+										</DialogTrigger>
+										<DialogContent
+											onClick={(e) => {
+												e.stopPropagation()
+											}}
+										>
+											<DialogHeader>
+												<DialogTitle>
+													Rename
+												</DialogTitle>
+											</DialogHeader>
+											<Input
+												autoFocus
+												value={newName}
+												onChange={(o) =>
+													setNewName(o.target.value)
+												}
+											/>
+											<DialogFooter>
+												<DialogClose asChild>
+													<Button
+														className="pr-4!"
+														onClick={(e) => {
+															e.stopPropagation()
+
+															const parentId =
+																folders.find(
+																	(o) =>
+																		o.id ===
+																		fileItem.id,
+																)!.parent_id
+
+															renameFolder(
+																fileItem.id,
+																{
+																	parent_id:
+																		parentId,
+																	name: newName,
+																},
+															)
+														}}
+													>
+														Rename
+													</Button>
+												</DialogClose>
+											</DialogFooter>
+										</DialogContent>
+									</Dialog>
 									<DropdownMenuItemCustom>
 										Copy
 									</DropdownMenuItemCustom>

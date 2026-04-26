@@ -11,8 +11,8 @@ class RequestApi {
 		return data as RequestDto[]
 	}
 
-	async create(request: RequestCreate) {
-		const { data } = await axios.post(this.path, request)
+	async create(dto: RequestCreate) {
+		const { data } = await axios.post(this.path, dto)
 
 		return data as RequestDto
 	}

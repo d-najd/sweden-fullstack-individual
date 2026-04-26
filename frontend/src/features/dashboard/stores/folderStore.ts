@@ -2,6 +2,7 @@ import FolderDto from "@/shared/types/folder/folder.dto"
 import { create } from "zustand"
 import folderApi from "@/api/folder"
 import { subscribeWithSelector } from "zustand/middleware"
+import FolderUpdate from "@/shared/types/folder/folder.update"
 
 export type FolderState = {
 	folders: FolderDto[]
@@ -16,6 +17,7 @@ export type FolderState = {
 	 */
 	loadMoreFolders: (parentId?: string, force?: boolean) => Promise<void>
 	createFolder: (parentId?: string) => Promise<void>
+	renameFolder: (id: string, dto: FolderUpdate) => Promise<void>
 	deleteFolder: (id: string) => Promise<void>
 }
 
@@ -62,6 +64,19 @@ const useFolderStore = create<FolderState>()(
 				})
 
 				await get().loadMoreFolders(parentId, true)
+			})
+		},
+		renameFolder: async (id: string, dto: FolderUpdate) => {
+			queue = queue.then(async () => {
+				const updatedDto = await folderApi.update(id, dto)
+
+				set((state) => ({
+					folders: [
+						...state.folders.filter((o) => o.id !== id),
+						updatedDto,
+					],
+					fetchedParentIds: state.fetchedParentIds,
+				}))
 			})
 		},
 		deleteFolder: async (id: string) => {

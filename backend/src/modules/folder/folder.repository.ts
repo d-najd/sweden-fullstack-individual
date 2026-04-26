@@ -22,6 +22,14 @@ class FolderRepository {
 		return result.insertedId.toString()
 	}
 
+	async update(id: string, entity: Partial<FolderEntity>): Promise<boolean> {
+		const result = await this.collection.updateOne(
+			{ _id: new ObjectId(id) },
+			{ $set: entity },
+		)
+		return result.modifiedCount > 0
+	}
+
 	async delete(id: string) {
 		const query = { _id: new ObjectId(id) }
 		const result = await this.collection.deleteOne(query)
