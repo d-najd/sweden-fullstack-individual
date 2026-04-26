@@ -104,12 +104,12 @@ type NavigationBarItemProps = {
 }
 
 function NavigationBar() {
-	const { selectedRequest } = useSelectedRequest()
+	const { selectedRequest: selectedTreeItem } = useSelectedRequest()
 	const itemTree: NavigationBarItemProps[] = []
 
-	if (selectedRequest) {
+	if (selectedTreeItem) {
 		itemTree.push({
-			text: selectedRequest.name,
+			text: selectedTreeItem.name,
 			isLast: true,
 			onClick: () => {},
 		})

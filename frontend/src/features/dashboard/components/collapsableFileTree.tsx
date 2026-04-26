@@ -402,7 +402,7 @@ const TreeItem = ({
 														(o) =>
 															o.id ===
 															fileItem.id,
-													)!
+													)
 
 												renameRequest(fileItem.id, {
 													...prevRequest,
