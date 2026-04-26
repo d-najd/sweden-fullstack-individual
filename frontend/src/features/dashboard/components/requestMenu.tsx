@@ -15,8 +15,10 @@ import {
 import { cva } from "class-variance-authority"
 import clsx from "clsx"
 import { ChevronRightIcon, SaveIcon } from "lucide-react"
-import useSelectedRequest from "../stores/selectedRequestStore"
-import { useState } from "react"
+import useSelectedRequestStore from "../stores/selectedRequestStore"
+import { useMemo, useState } from "react"
+import { cn } from "@/lib/utils"
+import useRequestStore from "../stores/requestStore"
 
 const optionsButtonStyle = cva("p-1!", {
 	variants: {
@@ -41,7 +43,10 @@ const RequestMenuSetting = {
 
 function RequestMenu({ className }: React.ComponentProps<"div">) {
 	const [selectedMenuSetting] = useState(RequestMenuSetting.Body)
+	const { selectedRequest, setSelectedRequest } = useSelectedRequestStore()
 	const requestMenuSettingsValues = Object.values(RequestMenuSetting)
+
+	const sendButtonStyle = cn("bg-blue-500! hover:bg-blue-700!")
 
 	return (
 		<>
@@ -60,15 +65,37 @@ function RequestMenu({ className }: React.ComponentProps<"div">) {
 								<div className="w-1 h-full border-solid! border-teal-900! border-l-2! "></div>
 							</InputGroupButton>
 						</InputGroupAddon>
-						<InputGroupInput className="focus:outline-none!" />
+						<InputGroupInput
+							value={selectedRequest.url ?? ""}
+							onChange={(o) =>
+								setSelectedRequest({
+									...selectedRequest,
+									url:
+										o.target.value !== ""
+											? o.target.value
+											: undefined,
+								})
+							}
+							className="focus:outline-none!"
+						/>
 					</InputGroup>
 					<ButtonGroup className="pl-1.5!">
-						<Button className="bg-blue-500! h-full pl-4! pr-4!">
+						<Button
+							className={cn(
+								sendButtonStyle,
+								"h-full pl-4! pr-4!",
+							)}
+						>
 							Send
 						</Button>
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<Button className="bg-blue-500! px-1.5! h-full border-l! border-l-black!">
+								<Button
+									className={cn(
+										sendButtonStyle,
+										"px-1.5! h-full border-l! border-l-black!",
+									)}
+								>
 									<ChevronRightIcon className="rotate-90" />
 								</Button>
 							</DropdownMenuTrigger>
@@ -89,9 +116,6 @@ function RequestMenu({ className }: React.ComponentProps<"div">) {
 						)
 					})}
 				</ButtonGroup>
-				<Row>
-					<Button>Test</Button>
-				</Row>
 			</Column>
 		</>
 	)
@@ -104,7 +128,18 @@ type NavigationBarItemProps = {
 }
 
 function NavigationBar() {
-	const { selectedRequest: selectedTreeItem } = useSelectedRequest()
+	const { selectedRequest: selectedTreeItem } = useSelectedRequestStore()
+	const { requests, updateRequest } = useRequestStore()
+	const { selectedRequest } = useSelectedRequestStore()
+	const requestModified = useMemo(() => {
+		if (!selectedRequest) return false
+
+		const storedRequest = requests.find((o) => o.id === selectedRequest.id)
+		if (!storedRequest) return false
+
+		return JSON.stringify(storedRequest) !== JSON.stringify(selectedRequest)
+	}, [requests, selectedRequest])
+
 	const itemTree: NavigationBarItemProps[] = []
 
 	if (selectedTreeItem) {
@@ -149,7 +184,16 @@ function NavigationBar() {
 			})}
 			<Row className="ml-auto!">
 				<ButtonGroup className="items-center">
-					<Button className={saveButtonStyle({ enabled: false })}>
+					<Button
+						onClick={() => {
+							if (!requestModified) return
+
+							updateRequest(selectedRequest.id, selectedRequest)
+						}}
+						className={saveButtonStyle({
+							enabled: requestModified,
+						})}
+					>
 						<SaveIcon />
 						Save
 					</Button>

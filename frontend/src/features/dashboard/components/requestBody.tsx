@@ -1,8 +1,8 @@
 import { Textarea } from "@/components/ui/textarea"
-import useSelectedRequest from "../stores/selectedRequestStore"
+import useSelectedRequestStore from "../stores/selectedRequestStore"
 
 function RequestBody() {
-	const { selectedRequest, setSelectedRequest } = useSelectedRequest()
+	const { selectedRequest, setSelectedRequest } = useSelectedRequestStore()
 
 	return (
 		<Textarea
@@ -12,7 +12,8 @@ function RequestBody() {
 
 				setSelectedRequest({
 					...selectedRequest,
-					json_body: e.target.value,
+					json_body:
+						e.target.value !== "" ? e.target.value : undefined,
 				})
 			}}
 			rows={12}

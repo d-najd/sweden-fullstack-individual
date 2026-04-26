@@ -17,7 +17,7 @@ export type FolderState = {
 	 */
 	loadMoreFolders: (parentId?: string, force?: boolean) => Promise<void>
 	createFolder: (parentId?: string) => Promise<void>
-	renameFolder: (id: string, dto: FolderUpdate) => Promise<void>
+	updateFolder: (id: string, dto: FolderUpdate) => Promise<void>
 	deleteFolder: (id: string) => Promise<void>
 }
 
@@ -66,7 +66,7 @@ const useFolderStore = create<FolderState>()(
 				await get().loadMoreFolders(parentId, true)
 			})
 		},
-		renameFolder: async (id: string, dto: FolderUpdate) => {
+		updateFolder: async (id: string, dto: FolderUpdate) => {
 			queue = queue.then(async () => {
 				const updatedDto = await folderApi.update(id, dto)
 

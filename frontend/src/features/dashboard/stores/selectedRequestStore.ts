@@ -7,7 +7,7 @@ export type SelectedRequestState = {
 	setSelectedRequest: (request: RequestDto) => void
 }
 
-const useSelectedRequest = create<SelectedRequestState>((set) => ({
+const useSelectedRequestStore = create<SelectedRequestState>((set) => ({
 	setSelectedRequest: (request: RequestDto) => {
 		set(() => ({
 			selectedRequest: request,
@@ -19,12 +19,14 @@ useRequestStore.subscribe(
 	(state) => state.requests,
 	(requests) => {
 		const request = requests.find(
-			(o) => o.id === useSelectedRequest.getState()?.selectedRequest?.id,
+			(o) =>
+				o.id ===
+				useSelectedRequestStore.getState()?.selectedRequest?.id,
 		)
 		if (!request) return
 
-		useSelectedRequest.getState().setSelectedRequest(request)
+		useSelectedRequestStore.getState().setSelectedRequest(request)
 	},
 )
 
-export default useSelectedRequest
+export default useSelectedRequestStore
