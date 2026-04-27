@@ -1,24 +1,6 @@
 # Backend
 
-## Features
-
-### [Express](https://expressjs.com/en/starter/examples.html)
-
-- Web framework
-
-### [Mysql2](https://sidorares.github.io/node-mysql2/docs)
-
-- Mysql adapter
-
-### [Typia](https://typia.io/docs/)
-
-- Used for validating that the received json is valid and doesn't contain any
-  unnecessary fields which then allows most queries to be done with just passing
-  the parsed object instead of manually settings each field
-
-### [Umzug](https://github.com/sequelize/umzug)
-
-- Used for database migrations, uses custom adapter to make it work like flyway
+Backend for the app
 
 ## How to use?
 
@@ -48,7 +30,8 @@ src/modules/user
 +-- types                # types scoped to the specific feature
 |   |
 |   +-- user.entity.ts   # user as it is represented in the database,
-|                        # not to be sent as is to the frontend
+|   |                    # not to be sent as is to the frontend
+|   +-- user.mapper.ts   # used for mapping from dto to entity and vice versa
 |
 +-- user.controller.ts   # handles what is sent to the frontend and calls the service
 |                        # as well as error handling
@@ -62,3 +45,10 @@ src/modules/user
 
 [Shared README](../shared/README.md)
 [Migrations README](./src/migrations/README.md)
+
+## Tech used
+
+- cors - cors is annoying
+- express
+- mongodb
+- umzug - database migrations

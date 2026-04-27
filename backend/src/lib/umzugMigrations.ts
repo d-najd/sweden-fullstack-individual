@@ -1,25 +1,17 @@
-// migrate.js
 import { Umzug, MongoDBStorage } from "umzug"
 import fs from "fs/promises"
 import path from "path"
 import db from "@/config/database"
 
-// Read all SQL files, parse version, sort ascending
 async function getFlywayMigrations() {
-	const migrationsDir = path.join(
-		process.cwd(),
-		"dist",
-		"backend",
-		"src",
-		"migrations",
-	)
+	const migrationsDir = path.join(process.cwd(), "src", "migrations")
 	const files = await fs.readdir(migrationsDir)
 
 	const migrations = []
 	for (const file of files) {
-		let match = file.match(/^V(\d+)__(.+)\.js/)
+		let match = file.match(/^V(\d+)__(.+)\.ts/)
 		if (!match) {
-			match = file.match(/^V(\d+)_(.+)\.js/)
+			match = file.match(/^V(\d+)_(.+)\.ts/)
 		}
 		if (!match) continue
 

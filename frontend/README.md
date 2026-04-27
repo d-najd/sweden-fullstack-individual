@@ -1,36 +1,8 @@
 # Frontend
 
-## Features
+Frontend for the app
 
-### [Chakra UI](https://chakra-ui.com/docs/components/concepts/overview)
-
-- Pre-made UI components, feel free to use html/css if you prefer but talk with
-  the other frontend devs first!
-- There are some example of component usage in the project
-
-### [Axios](https://axios-http.com/docs/example)
-
-- Sending requests with fetch has lots of boilerplate and is error prone so
-  this simplifies it
-
-### [Lucide](https://lucide.dev/icons/)
-
-- Library which contains icons so the icons in the app are consistent and it's
-  easy to find icons
-
-### [React](https://react.dev/)
-
-- My arch nemesis
-
-### [Zustand](https://zustand.docs.pmnd.rs/learn/guides/beginner-typescript)
-
-- State management library, belongs in the stores folder and must be in specific
-  format, check the stores in the project for example
-- If used correctly will allow us to cache the data I.E avoid re-fetching data
-  from the backend, try to increase the counter and navigate with the button
-  under it and back to see what I mean, one is with zustand the other with useState
-
-## How to use?
+## Structure
 
 ```
 src
@@ -44,6 +16,8 @@ src
 +-- assets            # contains the static files images, fonts, etc.
 |
 +-- components        # shared components used across the entire application
+|   |
+|   +-- ui            # shadcn ui components
 |
 +-- config            # global configurations, exported env variables etc.
 |
@@ -71,6 +45,8 @@ src/features/feature
 |
 +-- hooks       # hooks scoped to a specific feature
 |
++-- services    # application logic for specific feature
+|
 +-- stores      # state stores for a specific feature
 |
 +-- types       # typescript types used within the feature
@@ -79,3 +55,12 @@ src/features/feature
 ```
 
 [Shared README](../shared/README.md)
+
+## Tech used
+
+- tailwind
+- axios
+- lucide-react
+- shadcn - Components
+- zustand - State Management
+- chakra-ui - Forgot to remove it at the start and now styles will be messed up if I remove it

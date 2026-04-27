@@ -13,7 +13,7 @@ entity Request {
     folder_id: int
     method_id: int
     url: string
-    body?: string 
+    json_body?: string 
 }
 
 entity Method {

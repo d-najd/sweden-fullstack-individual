@@ -6,11 +6,6 @@
 			"@/*": ["./src/*"],
 			"@/shared/*": ["../shared/*"]
 		},
-		"plugins": [
-			{
-				"transform": "typia/lib/transform"
-			}
-		],
 		"rootDirs": [".", "../shared/"],
 		"rootDir": "..",
 		"outDir": "./dist",
