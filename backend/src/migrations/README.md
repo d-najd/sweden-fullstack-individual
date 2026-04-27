@@ -3,7 +3,7 @@
 ## Info
 
 - Runs the migrations in numeric ascending order, a table to the database called
-  `schema-history` will be created containing the migrations that have ran
+  `migrations` will be created containing the migrations that have ran
 
 ## Format
 
