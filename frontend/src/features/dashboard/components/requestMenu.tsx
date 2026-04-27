@@ -142,7 +142,7 @@ function RequestMenu({ className }: React.ComponentProps<"div">) {
 						</DropdownMenu>
 					</ButtonGroup>
 				</Row>
-				<ButtonGroup>
+				<ButtonGroup className="pt-1!">
 					{requestMenuSettingsValues.map((name) => {
 						return (
 							<Button

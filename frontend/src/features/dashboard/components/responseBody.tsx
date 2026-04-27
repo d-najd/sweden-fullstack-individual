@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card"
 import useInvokedResponseStore from "../stores/invokedRequestStore"
 import { useState, useEffect } from "react"
 
-function ResponseBody() {
+function ResponseBody({ className }: React.ComponentProps<"div">) {
 	const { invokedResponse } = useInvokedResponseStore()
 	const [responseText, setResponseText] = useState("")
 
@@ -26,11 +26,9 @@ function ResponseBody() {
 	}, [invokedResponse])
 
 	return (
-		<>
-			<Card>
-				<pre>{invokedResponse && responseText}</pre>
-			</Card>
-		</>
+		<Card className={className}>
+			<pre>{invokedResponse && responseText}</pre>
+		</Card>
 	)
 }
 
