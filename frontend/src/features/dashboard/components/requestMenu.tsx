@@ -23,6 +23,7 @@ import useInvokedResponseStore from "../stores/invokedRequestStore"
 import useRequestMethodStore from "../stores/requestMethodStore"
 import useSelectedRequestStore from "../stores/selectedRequestStore"
 import RequestTopBar from "./requestTopBar"
+import { toast } from "sonner"
 
 const optionsButtonStyle = cva("p-1!", {
 	variants: {
@@ -119,6 +120,9 @@ function RequestMenu({ className }: React.ComponentProps<"div">) {
 									.invokeRequest(selectedRequest)
 									.then((response) => {
 										setInvokedResponse(response)
+									})
+									.catch(() => {
+										toast("Invalid Request")
 									})
 							}}
 							className={cn(
