@@ -1,10 +1,13 @@
 import RequestDto from "@/shared/types/request/request.dto"
 import useRequestMethodStore from "../stores/requestMethodStore"
+import ExtendedResponse from "../types/ExtendedResponse"
 
 class RequestService {
 	cors = "https://corsproxy.io/?url="
 
-	async invokeRequest(request: RequestDto): Promise<Response> {
+	async invokeRequest(request: RequestDto): Promise<ExtendedResponse> {
+		const startTime = performance.now()
+
 		const requestMethod = useRequestMethodStore
 			.getState()
 			.requestMethods.find((o) => o.id === request.request_method_id)!
@@ -27,7 +30,14 @@ class RequestService {
 			? request.url
 			: this.cors + request.url
 
-		return await fetch(url, options)
+		const response = await fetch(url, options)
+		const endTime = performance.now()
+
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const resultAsAny = response as any
+		resultAsAny.duration = endTime - startTime
+
+		return resultAsAny as ExtendedResponse
 	}
 }
 

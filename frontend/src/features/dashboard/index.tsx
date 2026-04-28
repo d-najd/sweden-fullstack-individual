@@ -19,7 +19,7 @@ export default function DashboardPage() {
 						maxSize="60%"
 						defaultSize="20%"
 					>
-						<CollapsibleFileTree className="h-screen min-w-full" />
+						<CollapsibleFileTree className="h-full min-w-full" />
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel className="px-2.5!">

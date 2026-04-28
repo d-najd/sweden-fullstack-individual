@@ -229,7 +229,10 @@ const TreeItem = ({
 									</DropdownMenuItemCustom>
 									<DropdownMenuSeparator />
 									<Dialog>
-										<DialogTrigger asChild>
+										<DialogTrigger
+											asChild
+											className="focus:bg-accent! focus:text-accent-foreground!"
+										>
 											<DropdownMenuItemCustom
 												onSelect={(e) => {
 													e.preventDefault()
@@ -357,12 +360,16 @@ const TreeItem = ({
 						<DropdownMenuItemCustom>
 							Copy Link
 						</DropdownMenuItemCustom>
+						<DropdownMenuSeparator />
 						<DropdownMenuItemCustom>Copy</DropdownMenuItemCustom>
 						<DropdownMenuItemCustom>
 							Duplicate
 						</DropdownMenuItemCustom>
 						<Dialog>
-							<DialogTrigger asChild>
+							<DialogTrigger
+								asChild
+								className="focus:bg-accent! focus:text-accent-foreground!"
+							>
 								<DropdownMenuItemCustom
 									onSelect={(e) => {
 										e.preventDefault()

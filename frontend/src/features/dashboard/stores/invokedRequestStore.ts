@@ -1,12 +1,13 @@
 import { create } from "zustand"
+import ExtendedResponse from "../types/ExtendedResponse"
 
 export type SelectedRequestState = {
-	invokedResponse?: Response
-	setInvokedResponse: (response: Response) => void
+	invokedResponse?: ExtendedResponse
+	setInvokedResponse: (response: ExtendedResponse) => void
 }
 
 const useInvokedResponseStore = create<SelectedRequestState>((set) => ({
-	setInvokedResponse: (response: Response) => {
+	setInvokedResponse: (response: ExtendedResponse) => {
 		set(() => ({
 			invokedResponse: response,
 		}))

@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card"
 import useInvokedResponseStore from "../stores/invokedRequestStore"
 import { useState, useEffect } from "react"
+import Row from "@/components/Row"
 
 function ResponseBody({ className }: React.ComponentProps<"div">) {
 	const { invokedResponse } = useInvokedResponseStore()
@@ -27,6 +28,23 @@ function ResponseBody({ className }: React.ComponentProps<"div">) {
 
 	return (
 		<Card className={className}>
+			<Row>
+				<Row className="pl-2! gap-2">
+					<Card>Body</Card>
+					<Card>Cookies</Card>
+					<Card>Headers</Card>
+					<Card>Test Results</Card>
+				</Row>
+				<Row className="ml-auto! pr-8! gap-2">
+					<Card>
+						<Row className="gap-1.5!">
+							<p>{invokedResponse?.status ?? ""}</p>
+							<p>{invokedResponse?.statusText ?? ""}</p>
+						</Row>
+					</Card>
+					<Card>{invokedResponse?.duration ?? ""} ms</Card>
+				</Row>
+			</Row>
 			<pre>{invokedResponse && responseText}</pre>
 		</Card>
 	)
